@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home - {{ project_name }}{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="hero-container">
+        <div class="hero-badge">
+            <span class="badge-dot"></span>
+            <span>Module 1: Project Foundation & Environment Setup</span>
+        </div>
+        <h1 class="hero-title">
+            AI-Powered Food Waste Management <br>
+            <span class="highlight-green">& Surplus Redistribution</span>
+        </h1>
+        <p class="hero-subtitle">
+            Helping restaurants and food businesses track inventory, catch near-expiry food before it goes to waste, and seamlessly coordinate donations with verified NGOs.
+        </p>
+        <div class="hero-actions">
+            <a href="#system-check" class="btn btn-primary">View System Verification</a>
+            <a href="#roadmap" class="btn btn-outline">Explore Implementation Roadmap</a>
+            <button id="testApiBtn" class="btn btn-secondary">Test REST API</button>
+        </div>
+        <div id="apiResponseBox" class="api-response-box" style="display: none;">
+            <div class="api-response-header">
+                <span class="api-response-title">API Response (/api/health/):</span>
+                <button id="closeApiBox" class="api-close-btn">&times;</button>
+            </div>
+            <pre id="apiJsonDisplay">Loading...</pre>
+        </div>
+    </div>
+</section>
+
+<!-- System Verification Section -->
+<section id="system-check" class="section">
+    <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">System Status & Environment Verification</h2>
+            <p class="section-subtitle">
+                Confirming that the foundation modules, template engine, static assets, and configurations are active.
+            </p>
+        </div>
+
+        <div class="grid-cards">
+            <div class="card status-card">
+                <div class="card-icon check-icon">✓</div>
+                <div class="card-body">
+                    <h3>Django Core</h3>
+                    <p class="card-text">Django framework initialized with the modular <code>core</code> application.</p>
+                    <span class="status-pill pill-success">Operational</span>
+                </div>
+            </div>
+
+            <div class="card status-card">
+                <div class="card-icon check-icon">✓</div>
+                <div class="card-body">
+                    <h3>Django REST Framework</h3>
+                    <p class="card-text">REST endpoints ready for mobile clients, NGO apps, and AI prediction services.</p>
+                    <span class="status-pill pill-success">Enabled</span>
+                </div>
+            </div>
+
+            <div class="card status-card">
+                <div class="card-icon check-icon">✓</div>
+                <div class="card-body">
+                    <h3>Database Configuration</h3>
+                    <p class="card-text">Configured for <strong>PostgreSQL</strong> via decoupled <code>.env</code> environment variables.</p>
+                    <span class="status-pill pill-info">Engine: {{ db_engine }}</span>
+                </div>
+            </div>
+
+            <div class="card status-card">
+                <div class="card-icon check-icon">✓</div>
+                <div class="card-body">
+                    <h3>Templates & Static Assets</h3>
+                    <p class="card-text">Django template inheritance and green-and-white responsive CSS/JS pipeline verified.</p>
+                    <span class="status-pill pill-success">Rendering OK</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Implementation Roadmap -->
+<section id="roadmap" class="section bg-light">
+    <div class="section-container">
+        <div class="section-header">
+            <h2 class="section-title">Step-by-Step Implementation Roadmap</h2>
+            <p class="section-subtitle">
+                Built module-by-module with data integrity, safety validations, and automated testing at every step.
+            </p>
+        </div>
+
+        <div class="roadmap-timeline">
+            {% for mod in modules %}
+            <div class="timeline-item {% if mod.status == 'Completed' %}completed{% else %}pending{% endif %}">
+                <div class="timeline-marker">
+                    <span class="marker-number">{{ forloop.counter }}</span>
+                </div>
+                <div class="timeline-content card">
+                    <div class="timeline-header">
+                        <h3 class="timeline-title">{{ mod.name }}</h3>
+                        <span class="badge {% if mod.status == 'Completed' %}badge-completed{% else %}badge-upcoming{% endif %}">
+                            {{ mod.status }}
+                        </span>
+                    </div>
+                    <p class="timeline-desc">{{ mod.description }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Configuration Checklist -->
+<section class="section">
+    <div class="section-container">
+        <div class="checklist-card">
+            <div class="checklist-header">
+                <h3>PostgreSQL Local Setup Checklist</h3>
+                <span class="badge badge-info">Next Steps</span>
+            </div>
+            <div class="checklist-content">
+                <ol class="checklist-steps">
+                    <li>
+                        <strong>Create the database in PostgreSQL:</strong>
+                        <code>CREATE DATABASE foodwaste_db;</code>
+                    </li>
+                    <li>
+                        <strong>Review your <code>.env</code> file:</strong>
+                        Set your local PostgreSQL username, password, host, and port.
+                    </li>
+                    <li>
+                        <strong>Run migrations safely:</strong>
+                        <code>python manage.py migrate</code>
+                    </li>
+                    <li>
+                        <strong>Verify system checks:</strong>
+                        <code>python manage.py check</code>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
