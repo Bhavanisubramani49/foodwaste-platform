@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} — FoodWasteAI{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block page_subtitle %}Automated food waste monitoring and threshold notifications{% endblock %}
+
+{% block content %}
+<div class="fw-card mb-4" style="border-top: 4px solid var(--fw-orange);">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+        <div>
+            <h4 class="fw-bold mb-1"><i class="bi bi-clock-history text-danger me-2"></i>Active Expiry Monitoring</h4>
+            <p class="text-secondary small mb-0">Threshold rules: Critical (&le; 1 day), High (&le; 3 days), Medium (&le; 7 days).</p>
+        </div>
+        <a href="{% url 'core:marketplace' %}" class="btn btn-fw-primary btn-sm">
+            <i class="bi bi-shop me-1"></i> Convert to Surplus Listing
+        </a>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="p-3 rounded-3" style="background-color: var(--fw-danger-subtle); border: 1px solid #FCA5A5;">
+                <span class="badge badge-risk-critical mb-2">Critical: &le; 24 Hours</span>
+                <h3 class="fw-bold text-danger mb-1">7 Batches</h3>
+                <p class="small text-secondary mb-0">Prepared meals and baked goods requiring immediate donation action.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 rounded-3" style="background-color: var(--fw-orange-subtle); border: 1px solid var(--fw-orange-border);">
+                <span class="badge badge-risk-high mb-2">High: &le; 3 Days</span>
+                <h3 class="fw-bold text-warning mb-1" style="color: var(--fw-orange-deep) !important;">11 Batches</h3>
+                <p class="small text-secondary mb-0">Dairy, vegetables, and fresh produce eligible for marketplace broadcast.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 rounded-3" style="background-color: #FEF3C7; border: 1px solid #FDE68A;">
+                <span class="badge badge-risk-medium mb-2">Medium: &le; 7 Days</span>
+                <h3 class="fw-bold mb-1" style="color: #B45309;">14 Batches</h3>
+                <p class="small text-secondary mb-0">Packaged foods currently in standard operational monitoring.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

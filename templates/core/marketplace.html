@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} — FoodWasteAI{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block page_subtitle %}Milestone 3 — Verified surplus food listings available for immediate NGO claim{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <h4 class="fw-bold mb-1">Available Surplus Listings</h4>
+        <p class="text-secondary small mb-0">Eligible, non-expired food offered by local hospitality and retail partners.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{% url 'core:dashboard' %}" class="btn btn-fw-outline-orange">
+            <i class="bi bi-speedometer2 me-1"></i> Dashboard
+        </a>
+        <button class="btn btn-fw-primary" data-bs-toggle="modal" data-bs-target="#newListingModal">
+            <i class="bi bi-plus-circle me-1"></i> Post Surplus Listing
+        </button>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6 col-lg-4">
+        <div class="fw-card h-100" style="border-top: 4px solid var(--fw-orange);">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <span class="badge bg-light text-dark border">Bakery</span>
+                <span class="badge badge-risk-critical">Expires in 18h</span>
+            </div>
+            <h5 class="fw-bold mb-1">Artisanal Sourdough Loaves</h5>
+            <p class="text-secondary small mb-2"><i class="bi bi-geo-alt text-danger me-1"></i>Greenfield Bakery, Downtown (1.2 km away)</p>
+            <div class="p-2 rounded-2 mb-3" style="background-color: var(--fw-bg-page);">
+                <div class="d-flex justify-content-between small">
+                    <span class="text-secondary">Quantity:</span>
+                    <strong class="text-dark">24 loaves (approx 12 kg)</strong>
+                </div>
+                <div class="d-flex justify-content-between small">
+                    <span class="text-secondary">Pickup Window:</span>
+                    <strong style="color: var(--fw-orange);">Today, 6:00 PM – 9:00 PM</strong>
+                </div>
+            </div>
+            <button class="btn btn-fw-primary w-100 btn-sm">
+                <i class="bi bi-check-circle me-1"></i> Claim Surplus for NGO
+            </button>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4">
+        <div class="fw-card h-100" style="border-top: 4px solid var(--fw-blue);">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <span class="badge bg-light text-dark border">Dairy</span>
+                <span class="badge badge-risk-high">Expires in 2 days</span>
+            </div>
+            <h5 class="fw-bold mb-1">Greek Yogurt 500g Cups</h5>
+            <p class="text-secondary small mb-2"><i class="bi bi-geo-alt text-danger me-1"></i>Metro Fresh Supermarket (3.5 km away)</p>
+            <div class="p-2 rounded-2 mb-3" style="background-color: var(--fw-bg-page);">
+                <div class="d-flex justify-content-between small">
+                    <span class="text-secondary">Quantity:</span>
+                    <strong class="text-dark">40 tubs (20 kg)</strong>
+                </div>
+                <div class="d-flex justify-content-between small">
+                    <span class="text-secondary">Pickup Window:</span>
+                    <strong style="color: var(--fw-blue-deep);">Tomorrow, 10:00 AM – 2:00 PM</strong>
+                </div>
+            </div>
+            <button class="btn btn-fw-secondary w-100 btn-sm">
+                <i class="bi bi-check-circle me-1"></i> Claim Surplus for NGO
+            </button>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4">
+        <div class="fw-card h-100" style="border-top: 4px solid var(--fw-success);">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <span class="badge bg-light text-dark border">Prepared Meals</span>
+                <span class="badge badge-risk-critical">Expires Tonight</span>
+            </div>
+            <h5 class="fw-bold mb-1">Catering Rice & Vegetable Curry</h5>
+            <p class="text-secondary small mb-2"><i class="bi bi-geo-alt text-danger me-1"></i>Grand Banquet Kitchen (2.1 km away)</p>
+            <div class="p-2 rounded-2 mb-3" style="background-color: var(--fw-bg-page);">
+                <div class="d-flex justify-content-between small">
+                    <span class="text-secondary">Quantity:</span>
+                    <strong class="text-dark">50 hot meal portions</strong>
+                </div>
+                <div class="d-flex justify-content-between small">
+                    <span class="text-secondary">Pickup Window:</span>
+                    <strong class="text-danger">Today by 8:30 PM</strong>
+                </div>
+            </div>
+            <span class="badge badge-status-completed w-100 py-2 d-block text-center">
+                <i class="bi bi-lock-fill me-1"></i> Claimed by Hope Community Shelter
+            </span>
+        </div>
+    </div>
+</div>
+{% endblock %}

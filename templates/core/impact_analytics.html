@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} — FoodWasteAI{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block page_subtitle %}Measurable ESG metrics, landfill diversion totals, and CO2e emission calculations{% endblock %}
+
+{% block content %}
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card accent-green">
+            <span class="stat-title">Total Food Donated</span>
+            <div class="stat-value text-success">14,850 <span class="fs-6 fw-normal">kg</span></div>
+            <div class="stat-meta">100% human consumable</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card accent-blue">
+            <span class="stat-title">Meals Supported</span>
+            <div class="stat-value" style="color: var(--fw-blue-deep);">37,125</div>
+            <div class="stat-meta">~0.4 kg per wholesome meal</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card accent-orange">
+            <span class="stat-title">CO2e Emissions Prevented</span>
+            <div class="stat-value" style="color: var(--fw-orange);">26.7 <span class="fs-6 fw-normal">Tonnes</span></div>
+            <div class="stat-meta">EPA WARM methodology</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card accent-green">
+            <span class="stat-title">Water Conserved</span>
+            <div class="stat-value text-success">1.8 <span class="fs-6 fw-normal">M Liters</span></div>
+            <div class="stat-meta">Virtual water footprint saved</div>
+        </div>
+    </div>
+</div>
+
+<div class="fw-card">
+    <h5 class="fw-bold mb-2">Calculations & Methodology Transparency</h5>
+    <p class="text-secondary small mb-0">
+        Estimates follow standard UN FAO and EPA Food Waste factors: 1 kg of edible food redistributed corresponds to 2.5 average nutritional meals and prevents approximately 1.8 kg of CO2 equivalent lifecycle landfill methane emissions.
+    </p>
+</div>
+{% endblock %}

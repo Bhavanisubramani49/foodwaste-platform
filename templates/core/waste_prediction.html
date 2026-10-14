@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} — FoodWasteAI{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block page_subtitle %}Milestone 2 — Explainable machine-learning risk scoring and surplus forecasting{% endblock %}
+
+{% block content %}
+<div class="row g-4 mb-4">
+    <div class="col-lg-8">
+        <div class="fw-card h-100" style="border-top: 4px solid var(--fw-blue);">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h5 class="fw-bold mb-0">Explainable Waste-Risk Scoring Engine</h5>
+                <span class="badge" style="background-color: var(--fw-blue-subtle); color: var(--fw-blue-deep); border: 1px solid var(--fw-blue-border);">
+                    Rule-Based Baseline &rarr; ML Model
+                </span>
+            </div>
+            <p class="text-secondary small mb-3">
+                The prediction engine evaluates <strong>days remaining to expiry</strong>, <strong>current stock quantity</strong>, <strong>historical sales velocity</strong>, and <strong>storage temperature sensitivity</strong> to output a 0–100 risk score.
+            </p>
+            <div class="p-3 rounded-3 mb-3" style="background-color: var(--fw-bg-page); border: 1px solid var(--fw-border-color);">
+                <div class="d-flex justify-content-between mb-1">
+                    <span class="fw-bold small">Current Overall Waste Risk Index</span>
+                    <span class="fw-bold small text-warning" style="color: var(--fw-orange) !important;">48 / 100 (Moderate)</span>
+                </div>
+                <div class="progress" style="height: 10px;">
+                    <div class="progress-bar" role="progressbar" style="width: 48%; background-color: var(--fw-orange);" aria-valuenow="48" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+            <div class="alert alert-info py-2 px-3 small mb-0">
+                <i class="bi bi-info-circle me-1"></i> <strong>Milestone 2 Road:</strong> Transparent rule-based logic is active. When historical order datasets are populated, Scikit-learn Random Forest and Prophet time-series forecasting will train on verified consumption trends.
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="fw-card h-100">
+            <h5 class="fw-bold mb-3">AI Recommendations</h5>
+            <ul class="list-unstyled mb-0 d-flex flex-column gap-3">
+                <li class="d-flex align-items-start gap-2">
+                    <i class="bi bi-arrow-right-circle-fill text-danger mt-1"></i>
+                    <div>
+                        <strong class="small d-block">List 24 Loaves Sourdough</strong>
+                        <span class="text-secondary" style="font-size: 0.75rem;">Risk 92%: 18h until loss of freshness.</span>
+                    </div>
+                </li>
+                <li class="d-flex align-items-start gap-2">
+                    <i class="bi bi-arrow-right-circle-fill mt-1" style="color: var(--fw-orange);"></i>
+                    <div>
+                        <strong class="small d-block">Reduce Next Produce Order by 15%</strong>
+                        <span class="text-secondary" style="font-size: 0.75rem;">Spinach demand has decreased across mid-week cycles.</span>
+                    </div>
+                </li>
+                <li class="d-flex align-items-start gap-2">
+                    <i class="bi bi-arrow-right-circle-fill text-info mt-1"></i>
+                    <div>
+                        <strong class="small d-block">Broadcast 40 Tubs Greek Yogurt</strong>
+                        <span class="text-secondary" style="font-size: 0.75rem;">3 nearby shelters have requested active dairy donations.</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

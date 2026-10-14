@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} — FoodWasteAI{% endblock %}
+{% block page_title %}Donation Requests & Allocations{% endblock %}
+{% block page_subtitle %}Review incoming claims, approve distributions, and monitor collection statuses{% endblock %}
+
+{% block content %}
+<div class="fw-table-container mb-4">
+    <div class="table-header-box">
+        <div>
+            <h5 class="fw-bold mb-1">Active Donation Requests</h5>
+            <p class="text-secondary small mb-0">Authorized status transitions: Requested &rarr; Approved &rarr; Scheduled &rarr; Collected &rarr; Completed.</p>
+        </div>
+        <div class="filter-chips">
+            <span class="filter-chip active">All (4)</span>
+            <span class="filter-chip">Pending Approval (2)</span>
+            <span class="filter-chip">Scheduled (1)</span>
+            <span class="filter-chip">In Transit (1)</span>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="fw-table table">
+            <thead>
+                <tr>
+                    <th>Request ID</th>
+                    <th>Surplus Item</th>
+                    <th>Claiming NGO</th>
+                    <th>Requested Qty</th>
+                    <th>Scheduled Pickup</th>
+                    <th>Status</th>
+                    <th class="text-end">Management Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="font-monospace fw-bold">#REQ-8901</span></td>
+                    <td>
+                        <strong>Artisanal Sourdough Bread</strong>
+                        <span class="d-block small text-secondary">24 loaves</span>
+                    </td>
+                    <td>
+                        <strong>St. Jude Kitchen</strong>
+                        <span class="d-block small text-secondary">Contact: Brother Mark</span>
+                    </td>
+                    <td class="fw-bold">24 loaves</td>
+                    <td>Today, 7:00 PM</td>
+                    <td><span class="badge badge-status-pending">Pending Approval</span></td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-fw-primary me-1">Approve</button>
+                        <button class="btn btn-sm btn-outline-danger">Reject</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="font-monospace fw-bold">#REQ-8898</span></td>
+                    <td>
+                        <strong>Greek Yogurt 500g Cups</strong>
+                        <span class="d-block small text-secondary">40 tubs</span>
+                    </td>
+                    <td>
+                        <strong>City Children Home</strong>
+                        <span class="d-block small text-secondary">Contact: Sarah Jenkins</span>
+                    </td>
+                    <td class="fw-bold">40 tubs</td>
+                    <td>Tomorrow, 11:30 AM</td>
+                    <td><span class="badge badge-status-pending">Pending Approval</span></td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-fw-primary me-1">Approve</button>
+                        <button class="btn btn-sm btn-outline-danger">Reject</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="font-monospace fw-bold">#REQ-8850</span></td>
+                    <td>
+                        <strong>Cooked Rice & Veg Curry</strong>
+                        <span class="d-block small text-secondary">50 portions</span>
+                    </td>
+                    <td>
+                        <strong>Hope Community Shelter</strong>
+                        <span class="d-block small text-secondary">Van #DL-04-A-1102</span>
+                    </td>
+                    <td class="fw-bold">50 portions</td>
+                    <td>Today, 7:30 PM</td>
+                    <td><span class="badge badge-status-completed">Scheduled</span></td>
+                    <td class="text-end">
+                        <a href="{% url 'core:pickup_schedule' %}" class="btn btn-sm btn-fw-secondary">
+                            View Pickup
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,147 +1,172 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Home - {{ project_name }}{% endblock %}
+{% block title %}FoodWasteAI — Turn Surplus Food into Community Impact{% endblock %}
+{% block page_title %}Welcome to FoodWasteAI{% endblock %}
+{% block page_subtitle %}Infosys Virtual Internship — AI Domain Project{% endblock %}
 
 {% block content %}
-<section class="hero-section">
-    <div class="hero-container">
-        <div class="hero-badge">
-            <span class="badge-dot"></span>
-            <span>Module 1: Project Foundation & Environment Setup</span>
-        </div>
-        <h1 class="hero-title">
-            AI-Powered Food Waste Management <br>
-            <span class="highlight-green">& Surplus Redistribution</span>
-        </h1>
-        <p class="hero-subtitle">
-            Helping restaurants and food businesses track inventory, catch near-expiry food before it goes to waste, and seamlessly coordinate donations with verified NGOs.
-        </p>
-        <div class="hero-actions">
-            <a href="#system-check" class="btn btn-primary">View System Verification</a>
-            <a href="#roadmap" class="btn btn-outline">Explore Implementation Roadmap</a>
-            <button id="testApiBtn" class="btn btn-secondary">Test REST API</button>
-        </div>
-        <div id="apiResponseBox" class="api-response-box" style="display: none;">
-            <div class="api-response-header">
-                <span class="api-response-title">API Response (/api/health/):</span>
-                <button id="closeApiBox" class="api-close-btn">&times;</button>
-            </div>
-            <pre id="apiJsonDisplay">Loading...</pre>
-        </div>
-    </div>
-</section>
-
-<!-- System Verification Section -->
-<section id="system-check" class="section">
-    <div class="section-container">
-        <div class="section-header">
-            <h2 class="section-title">System Status & Environment Verification</h2>
-            <p class="section-subtitle">
-                Confirming that the foundation modules, template engine, static assets, and configurations are active.
+<!-- Hero Section -->
+<div class="fw-card mb-4" style="background: linear-gradient(135deg, #FFFFFF 0%, #FFF7ED 50%, #F0F9FF 100%); border-left: 5px solid var(--fw-orange);">
+    <div class="row align-items-center py-4 px-2">
+        <div class="col-lg-8">
+            <span class="badge badge-status mb-3" style="background-color: var(--fw-orange-subtle); color: var(--fw-orange-deep); border: 1px solid var(--fw-orange-border);">
+                <i class="bi bi-stars"></i> AI-Powered Food Waste Management Platform
+            </span>
+            <h1 class="display-5 fw-bold text-dark mb-3" style="letter-spacing: -0.03em;">
+                Turn Surplus Food into <br>
+                <span style="color: var(--fw-orange);">Community Impact.</span>
+            </h1>
+            <p class="lead text-secondary mb-4" style="max-width: 680px; font-size: 1.1rem;">
+                Empowering restaurants, supermarkets, and bakeries with real-time inventory intelligence, AI waste-risk prediction, and instant redistribution to local NGOs and community kitchens.
             </p>
+            <div class="d-flex flex-wrap gap-3">
+                <a href="{% url 'core:dashboard' %}" class="btn btn-fw-primary btn-lg d-inline-flex align-items-center gap-2">
+                    <i class="bi bi-speedometer2"></i>
+                    <span>Get Started</span>
+                </a>
+                <a href="#howItWorks" class="btn btn-fw-secondary btn-lg d-inline-flex align-items-center gap-2">
+                    <i class="bi bi-play-circle"></i>
+                    <span>Explore How It Works</span>
+                </a>
+                <a href="{% url 'core:marketplace' %}" class="btn btn-fw-outline-orange btn-lg d-inline-flex align-items-center gap-2">
+                    <i class="bi bi-shop"></i>
+                    <span>Browse Marketplace</span>
+                </a>
+            </div>
         </div>
-
-        <div class="grid-cards">
-            <div class="card status-card">
-                <div class="card-icon check-icon">✓</div>
-                <div class="card-body">
-                    <h3>Django Core</h3>
-                    <p class="card-text">Django framework initialized with the modular <code>core</code> application.</p>
-                    <span class="status-pill pill-success">Operational</span>
+        <div class="col-lg-4 d-none d-lg-block text-center">
+            <div class="p-4 rounded-4" style="background: rgba(255, 255, 255, 0.8); border: 1px solid var(--fw-blue-border); box-shadow: var(--fw-shadow-hover);">
+                <div class="stat-icon-box mx-auto mb-3" style="width: 64px; height: 64px; border-radius: 50%; background: var(--fw-orange-subtle); color: var(--fw-orange); display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                    <i class="bi bi-pie-chart-fill"></i>
                 </div>
-            </div>
-
-            <div class="card status-card">
-                <div class="card-icon check-icon">✓</div>
-                <div class="card-body">
-                    <h3>Django REST Framework</h3>
-                    <p class="card-text">REST endpoints ready for mobile clients, NGO apps, and AI prediction services.</p>
-                    <span class="status-pill pill-success">Enabled</span>
-                </div>
-            </div>
-
-            <div class="card status-card">
-                <div class="card-icon check-icon">✓</div>
-                <div class="card-body">
-                    <h3>Database Configuration</h3>
-                    <p class="card-text">Configured for <strong>PostgreSQL</strong> via decoupled <code>.env</code> environment variables.</p>
-                    <span class="status-pill pill-info">Engine: {{ db_engine }}</span>
-                </div>
-            </div>
-
-            <div class="card status-card">
-                <div class="card-icon check-icon">✓</div>
-                <div class="card-body">
-                    <h3>Templates & Static Assets</h3>
-                    <p class="card-text">Django template inheritance and green-and-white responsive CSS/JS pipeline verified.</p>
-                    <span class="status-pill pill-success">Rendering OK</span>
+                <h4 class="fw-bold text-dark mb-1">14,850 kg</h4>
+                <p class="text-secondary small mb-3">Surplus Food Redistributed</p>
+                <div class="d-flex justify-content-between px-3 py-2 rounded-3" style="background-color: var(--fw-blue-subtle);">
+                    <span class="small fw-semibold text-secondary">Meals Supported:</span>
+                    <span class="small fw-bold" style="color: var(--fw-blue-deep);">37,125</span>
                 </div>
             </div>
         </div>
     </div>
-</section>
+</div>
 
-<!-- Implementation Roadmap -->
-<section id="roadmap" class="section bg-light">
-    <div class="section-container">
-        <div class="section-header">
-            <h2 class="section-title">Step-by-Step Implementation Roadmap</h2>
-            <p class="section-subtitle">
-                Built module-by-module with data integrity, safety validations, and automated testing at every step.
-            </p>
+<!-- 3-Step Workflow -->
+<div id="howItWorks" class="mb-5">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">How FoodWasteAI Works</h3>
+            <p class="text-secondary mb-0">From shelf tracking to community distribution in three seamless steps.</p>
         </div>
+        <span class="badge" style="background-color: var(--fw-blue-subtle); color: var(--fw-blue-deep); border: 1px solid var(--fw-blue-border); padding: 0.5rem 0.85rem;">
+            End-to-End Lifecycle
+        </span>
+    </div>
 
-        <div class="roadmap-timeline">
-            {% for mod in modules %}
-            <div class="timeline-item {% if mod.status == 'Completed' %}completed{% else %}pending{% endif %}">
-                <div class="timeline-marker">
-                    <span class="marker-number">{{ forloop.counter }}</span>
+    <div class="row g-4">
+        {% for step in steps %}
+        <div class="col-md-4">
+            <div class="fw-card h-100" style="border-top: 4px solid {% if forloop.counter == 1 %}var(--fw-orange){% elif forloop.counter == 2 %}var(--fw-blue){% else %}var(--fw-success){% endif %};">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <span class="fw-bold display-6" style="color: {% if forloop.counter == 1 %}var(--fw-orange){% elif forloop.counter == 2 %}var(--fw-blue-deep){% else %}var(--fw-success){% endif %}; opacity: 0.7;">
+                        {{ step.num }}
+                    </span>
+                    <span class="stat-icon {% if forloop.counter == 1 %}stat-icon-orange{% elif forloop.counter == 2 %}stat-icon-blue{% else %}stat-icon-green{% endif %}">
+                        <i class="bi {% if forloop.counter == 1 %}bi-box-seam{% elif forloop.counter == 2 %}bi-cpu{% else %}bi-heart{% endif %}"></i>
+                    </span>
                 </div>
-                <div class="timeline-content card">
-                    <div class="timeline-header">
-                        <h3 class="timeline-title">{{ mod.name }}</h3>
-                        <span class="badge {% if mod.status == 'Completed' %}badge-completed{% else %}badge-upcoming{% endif %}">
-                            {{ mod.status }}
-                        </span>
+                <h5 class="fw-bold mb-2">{{ step.title }}</h5>
+                <p class="text-secondary small mb-0">{{ step.desc }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Feature Pillars -->
+<div class="mb-5">
+    <div class="mb-4">
+        <h3 class="fw-bold mb-1">Core Platform Pillars</h3>
+        <p class="text-secondary mb-0">Designed specifically for hospitality donors, retail supermarkets, and charity logistics.</p>
+    </div>
+
+    <div class="row g-4">
+        {% for feat in features %}
+        <div class="col-md-6 col-lg-3">
+            <div class="fw-card h-100 d-flex flex-column">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div class="stat-icon stat-icon-orange">
+                        <i class="bi {{ feat.icon }}"></i>
                     </div>
-                    <p class="timeline-desc">{{ mod.description }}</p>
+                    <span class="badge" style="background-color: var(--fw-orange-subtle); color: var(--fw-orange-deep); border: 1px solid var(--fw-orange-border);">
+                        {{ feat.badge }}
+                    </span>
+                </div>
+                <h5 class="fw-bold mb-2">{{ feat.title }}</h5>
+                <p class="text-secondary small flex-grow-1">{{ feat.desc }}</p>
+                <div class="pt-2 border-top">
+                    <a href="{% url 'core:dashboard' %}" class="small fw-bold text-decoration-none" style="color: var(--fw-orange);">
+                        Explore Feature &rarr;
+                    </a>
                 </div>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
     </div>
-</section>
+</div>
 
-<!-- Configuration Checklist -->
-<section class="section">
-    <div class="section-container">
-        <div class="checklist-card">
-            <div class="checklist-header">
-                <h3>PostgreSQL Local Setup Checklist</h3>
-                <span class="badge badge-info">Next Steps</span>
+<!-- Dual Portals Entry Point -->
+<div class="row g-4 mb-5">
+    <!-- For Businesses -->
+    <div class="col-md-6">
+        <div class="fw-card h-100" style="background: linear-gradient(180deg, #FFFFFF 0%, #FFF7ED 100%); border: 1px solid var(--fw-orange-border);">
+            <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="stat-icon stat-icon-orange" style="width: 48px; height: 48px; font-size: 1.5rem;">
+                    <i class="bi bi-shop"></i>
+                </div>
+                <div>
+                    <h4 class="fw-bold mb-0">For Businesses & Restaurants</h4>
+                    <span class="text-secondary small">Supermarkets, Bakeries, Caterers</span>
+                </div>
             </div>
-            <div class="checklist-content">
-                <ol class="checklist-steps">
-                    <li>
-                        <strong>Create the database in PostgreSQL:</strong>
-                        <code>CREATE DATABASE foodwaste_db;</code>
-                    </li>
-                    <li>
-                        <strong>Review your <code>.env</code> file:</strong>
-                        Set your local PostgreSQL username, password, host, and port.
-                    </li>
-                    <li>
-                        <strong>Run migrations safely:</strong>
-                        <code>python manage.py migrate</code>
-                    </li>
-                    <li>
-                        <strong>Verify system checks:</strong>
-                        <code>python manage.py check</code>
-                    </li>
-                </ol>
+            <p class="text-secondary small mb-4">
+                Track your expiring batches, cut storage losses, automate donation paperwork, and log verifiable ESG & CSR impact metrics.
+            </p>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'core:dashboard' %}" class="btn btn-fw-primary btn-sm">
+                    <i class="bi bi-speedometer2 me-1"></i> Open Business Dashboard
+                </a>
+                <a href="{% url 'core:inventory_list' %}" class="btn btn-fw-secondary btn-sm">
+                    <i class="bi bi-plus-circle me-1"></i> Manage Inventory
+                </a>
             </div>
         </div>
     </div>
-</section>
+
+    <!-- For NGOs -->
+    <div class="col-md-6">
+        <div class="fw-card h-100" style="background: linear-gradient(180deg, #FFFFFF 0%, #F0F9FF 100%); border: 1px solid var(--fw-blue-border);">
+            <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="stat-icon stat-icon-blue" style="width: 48px; height: 48px; font-size: 1.5rem;">
+                    <i class="bi bi-heart-pulse"></i>
+                </div>
+                <div>
+                    <h4 class="fw-bold mb-0">For NGOs & Community Kitchens</h4>
+                    <span class="text-secondary small">Food Banks, Shelters, Relief Organizations</span>
+                </div>
+            </div>
+            <p class="text-secondary small mb-4">
+                Register organizational demand, receive instant alerts when compatible surplus is listed nearby, and schedule verified pickups.
+            </p>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'core:marketplace' %}" class="btn btn-fw-secondary btn-sm" style="background-color: var(--fw-blue-deep); color: #FFFFFF; border-color: var(--fw-blue-deep);">
+                    <i class="bi bi-basket me-1"></i> Browse Available Food
+                </a>
+                <a href="{% url 'core:ngo_requirements' %}" class="btn btn-fw-secondary btn-sm">
+                    <i class="bi bi-card-checklist me-1"></i> Post Requirements
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

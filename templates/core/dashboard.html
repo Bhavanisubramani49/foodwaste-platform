@@ -1,0 +1,488 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Business Dashboard — FoodWasteAI{% endblock %}
+{% block page_title %}Business Operations Dashboard{% endblock %}
+{% block page_subtitle %}Live inventory monitoring, waste-risk prediction, and surplus donation tracking{% endblock %}
+
+{% block content %}
+<!-- Quick Action Buttons Toolbar -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-4 col-xl-2">
+        <a href="{% url 'core:inventory_list' %}" class="quick-action-card">
+            <div class="quick-action-icon">
+                <i class="bi bi-plus-circle"></i>
+            </div>
+            <div>
+                <strong class="d-block small">Add Inventory</strong>
+                <span class="text-secondary" style="font-size: 0.72rem;">New batch</span>
+            </div>
+        </a>
+    </div>
+    <div class="col-6 col-md-4 col-xl-2">
+        <a href="{% url 'core:inventory_list' %}#importCsv" class="quick-action-card">
+            <div class="quick-action-icon" style="background-color: var(--fw-blue-subtle); color: var(--fw-blue-deep);">
+                <i class="bi bi-file-earmark-spreadsheet"></i>
+            </div>
+            <div>
+                <strong class="d-block small">Import CSV</strong>
+                <span class="text-secondary" style="font-size: 0.72rem;">Bulk upload</span>
+            </div>
+        </a>
+    </div>
+    <div class="col-6 col-md-4 col-xl-2">
+        <a href="{% url 'core:expiry_alerts' %}" class="quick-action-card">
+            <div class="quick-action-icon" style="background-color: #FEF3C7; color: var(--fw-warning);">
+                <i class="bi bi-exclamation-triangle"></i>
+            </div>
+            <div>
+                <strong class="d-block small">Expiry Alerts</strong>
+                <span class="text-secondary" style="font-size: 0.72rem;">18 critical</span>
+            </div>
+        </a>
+    </div>
+    <div class="col-6 col-md-4 col-xl-2">
+        <a href="{% url 'core:waste_prediction' %}" class="quick-action-card">
+            <div class="quick-action-icon" style="background-color: var(--fw-blue-subtle); color: var(--fw-blue-deep);">
+                <i class="bi bi-cpu"></i>
+            </div>
+            <div>
+                <strong class="d-block small">Run AI Forecast</strong>
+                <span class="text-secondary" style="font-size: 0.72rem;">Risk scoring</span>
+            </div>
+        </a>
+    </div>
+    <div class="col-6 col-md-4 col-xl-2">
+        <a href="{% url 'core:marketplace' %}" class="quick-action-card">
+            <div class="quick-action-icon" style="background-color: var(--fw-orange-subtle); color: var(--fw-orange);">
+                <i class="bi bi-shop"></i>
+            </div>
+            <div>
+                <strong class="d-block small">List Surplus</strong>
+                <span class="text-secondary" style="font-size: 0.72rem;">Broadcast NGO</span>
+            </div>
+        </a>
+    </div>
+    <div class="col-6 col-md-4 col-xl-2">
+        <a href="{% url 'core:donation_requests' %}" class="quick-action-card">
+            <div class="quick-action-icon" style="background-color: var(--fw-success-subtle); color: var(--fw-success);">
+                <i class="bi bi-check-circle"></i>
+            </div>
+            <div>
+                <strong class="d-block small">Review Requests</strong>
+                <span class="text-secondary" style="font-size: 0.72rem;">4 pending</span>
+            </div>
+        </a>
+    </div>
+</div>
+
+<!-- 8 Top KPI Summary Cards -->
+<div class="row g-3 mb-4">
+    <!-- Card 1: Total Inventory Items -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card accent-blue">
+            <div class="stat-header">
+                <span class="stat-title">Inventory Batches</span>
+                <div class="stat-icon stat-icon-blue">
+                    <i class="bi bi-boxes"></i>
+                </div>
+            </div>
+            <div class="stat-value">{{ stats.total_items }}</div>
+            <div class="stat-meta">
+                <i class="bi bi-check2-circle text-success"></i>
+                <span>Active monitored lines</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 2: Total Stock Quantity -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card accent-blue">
+            <div class="stat-header">
+                <span class="stat-title">Total Stock Weight</span>
+                <div class="stat-icon stat-icon-blue">
+                    <i class="bi bi-speedometer2"></i>
+                </div>
+            </div>
+            <div class="stat-value">{{ stats.total_stock_kg }} <span class="fs-6 text-secondary fw-normal">kg</span></div>
+            <div class="stat-meta">
+                <span class="badge bg-light text-secondary border">Across 6 categories</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 3: Expiring Soon (Orange Accent) -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card accent-orange">
+            <div class="stat-header">
+                <span class="stat-title">Expiring Soon (≤ 3 Days)</span>
+                <div class="stat-icon stat-icon-orange">
+                    <i class="bi bi-clock-history"></i>
+                </div>
+            </div>
+            <div class="stat-value text-danger" style="color: var(--fw-orange-deep) !important;">
+                {{ stats.expiring_soon }}
+            </div>
+            <div class="stat-meta">
+                <span class="badge badge-risk-high">High urgency</span>
+                <span class="ms-1 text-secondary">needs action</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 4: High-Risk Items -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card accent-danger">
+            <div class="stat-header">
+                <span class="stat-title">Critical Waste Risk</span>
+                <div class="stat-icon stat-icon-danger">
+                    <i class="bi bi-exclamation-octagon"></i>
+                </div>
+            </div>
+            <div class="stat-value text-danger">{{ stats.high_risk_items }}</div>
+            <div class="stat-meta">
+                <span class="badge badge-risk-critical">Expires &le; 24h</span>
+                <span class="ms-1 text-secondary">donate now</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 5: Surplus Food Available -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card accent-blue">
+            <div class="stat-header">
+                <span class="stat-title">Eligible Surplus</span>
+                <div class="stat-icon stat-icon-blue">
+                    <i class="bi bi-basket"></i>
+                </div>
+            </div>
+            <div class="stat-value" style="color: var(--fw-blue-deep);">{{ stats.surplus_available_kg }} <span class="fs-6 text-secondary fw-normal">kg</span></div>
+            <div class="stat-meta">
+                <span class="badge badge-status-surplus">Active on Marketplace</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 6: Pending Donation Requests -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card accent-orange">
+            <div class="stat-header">
+                <span class="stat-title">Pending NGO Claims</span>
+                <div class="stat-icon stat-icon-orange">
+                    <i class="bi bi-bell-fill"></i>
+                </div>
+            </div>
+            <div class="stat-value" style="color: var(--fw-orange);">{{ stats.pending_requests }}</div>
+            <div class="stat-meta">
+                <a href="{% url 'core:donation_requests' %}" class="small text-decoration-none fw-bold" style="color: var(--fw-orange);">
+                    Review Claims &rarr;
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 7: Completed Donations -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card accent-green">
+            <div class="stat-header">
+                <span class="stat-title">Completed Donations</span>
+                <div class="stat-icon stat-icon-green">
+                    <i class="bi bi-check2-all"></i>
+                </div>
+            </div>
+            <div class="stat-value text-success">{{ stats.completed_donations }}</div>
+            <div class="stat-meta">
+                <span class="text-secondary">Verified by receiving NGOs</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card 8: Estimated Waste Avoided -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card accent-green">
+            <div class="stat-header">
+                <span class="stat-title">Waste Avoided (Total)</span>
+                <div class="stat-icon stat-icon-green">
+                    <i class="bi bi-tree-fill"></i>
+                </div>
+            </div>
+            <div class="stat-value text-success">{{ stats.waste_avoided_kg }} <span class="fs-6 text-secondary fw-normal">kg</span></div>
+            <div class="stat-meta">
+                <span class="badge badge-status-completed">~{{ stats.meals_provided }} meals saved</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Interactive Chart.js Visualisations -->
+<div class="row g-4 mb-4">
+    <!-- Chart 1: Stock by Category -->
+    <div class="col-lg-6">
+        <div class="fw-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">Inventory Stock by Category</h5>
+                <span class="badge bg-light text-secondary border">Total: {{ stats.total_stock_kg }} kg</span>
+            </div>
+            <div style="height: 280px; position: relative;">
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart 2: Expiry Forecast Timeline -->
+    <div class="col-lg-6">
+        <div class="fw-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">Upcoming Expiry Timeline (Next 7 Days)</h5>
+                <span class="badge" style="background-color: var(--fw-orange-subtle); color: var(--fw-orange-deep); border: 1px solid var(--fw-orange-border);">
+                    Urgent Batches
+                </span>
+            </div>
+            <div style="height: 280px; position: relative;">
+                <canvas id="expiryTimelineChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart 3: AI Waste-Risk Distribution -->
+    <div class="col-lg-4">
+        <div class="fw-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">AI Waste-Risk Distribution</h5>
+                <span class="badge" style="background-color: var(--fw-blue-subtle); color: var(--fw-blue-deep); border: 1px solid var(--fw-blue-border);">
+                    Rule-Based Score
+                </span>
+            </div>
+            <div style="height: 260px; position: relative;">
+                <canvas id="riskChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart 4: Monthly Redistribution Volume -->
+    <div class="col-lg-8">
+        <div class="fw-card h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">Monthly Food Redistribution Volume (kg)</h5>
+                <span class="badge" style="background-color: var(--fw-success-subtle); color: var(--fw-success);">
+                    Growing Impact
+                </span>
+            </div>
+            <div style="height: 260px; position: relative;">
+                <canvas id="donationVolumeChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity & Surplus Allocations Table -->
+<div class="fw-table-container mb-4">
+    <div class="table-header-box">
+        <div>
+            <h5 class="fw-bold mb-1">Recent Inventory & Surplus Activity</h5>
+            <p class="text-secondary small mb-0">Real-time status of monitored batches, risk scores, and claim actions.</p>
+        </div>
+        <div class="filter-chips">
+            <span class="filter-chip active" data-filter="all">All Batches</span>
+            <span class="filter-chip" data-filter="critical">Critical (≤ 24h)</span>
+            <span class="filter-chip" data-filter="surplus">Surplus Listed</span>
+            <span class="filter-chip" data-filter="pending">Claims Pending</span>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="fw-table table">
+            <thead>
+                <tr>
+                    <th>Product & Batch</th>
+                    <th>Category</th>
+                    <th>Available Quantity</th>
+                    <th>Expiry Date</th>
+                    <th>Waste-Risk Level</th>
+                    <th>Surplus & NGO Status</th>
+                    <th class="text-end">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in recent_activities %}
+                <tr>
+                    <td>
+                        <strong class="d-block">{{ item.product }}</strong>
+                        <span class="text-secondary small font-monospace">BATCH-#{{ forloop.counter|stringformat:"04d" }}</span>
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-dark border">{{ item.category }}</span>
+                    </td>
+                    <td class="fw-bold">{{ item.quantity }}</td>
+                    <td>
+                        <span class="fw-semibold {% if 'Today' in item.expiry or 'Tomorrow' in item.expiry %}text-danger{% else %}text-secondary{% endif %}">
+                            {{ item.expiry }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge-status {{ item.risk_badge }}">
+                            <i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i>
+                            {{ item.risk_level }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge-status {% if 'Claimed' in item.donation_status %}badge-status-completed{% elif 'Pending' in item.donation_status %}badge-status-pending{% else %}badge-status-surplus{% endif %}">
+                            {{ item.donation_status }}
+                        </span>
+                    </td>
+                    <td class="text-end">
+                        <a href="{% url 'core:marketplace' %}" class="btn btn-sm btn-fw-outline-orange">
+                            {{ item.action_label }}
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-4 text-secondary">
+                        <i class="bi bi-inbox fs-3 d-block mb-2 text-muted"></i>
+                        No inventory batches found. Click "Add Inventory" to register your first product.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Chart.js Initialization Script with Orange + Sky Blue Palette -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Category Distribution Chart (Doughnut)
+    const ctxCat = document.getElementById('categoryChart');
+    if (ctxCat) {
+        new Chart(ctxCat, {
+            type: 'doughnut',
+            data: {
+                labels: {{ chart_categories_labels|safe }},
+                datasets: [{
+                    data: {{ chart_categories_data|safe }},
+                    backgroundColor: [
+                        '#F97316', // Primary Orange
+                        '#38BDF8', // Sky Blue
+                        '#EA580C', // Deep Orange
+                        '#0284C7', // Deep Blue
+                        '#F59E0B', // Amber
+                        '#94A3B8'  // Slate
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#FFFFFF'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'right' }
+                }
+            }
+        });
+    }
+
+    // 2. Expiry Timeline Chart (Bar with Orange Highlights)
+    const ctxExp = document.getElementById('expiryTimelineChart');
+    if (ctxExp) {
+        new Chart(ctxExp, {
+            type: 'bar',
+            data: {
+                labels: {{ chart_expiry_labels|safe }},
+                datasets: [{
+                    label: 'Items Expiring',
+                    data: {{ chart_expiry_data|safe }},
+                    backgroundColor: [
+                        '#DC2626', // Today (Critical Red)
+                        '#EA580C', // Tomorrow (Deep Orange)
+                        '#F97316', // +2 Days (Orange)
+                        '#F59E0B', // +3 Days (Amber)
+                        '#38BDF8', // +4 Days (Sky Blue)
+                        '#38BDF8',
+                        '#38BDF8',
+                        '#38BDF8'
+                    ],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#F1F5F9' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    }
+
+    // 3. Waste-Risk Distribution Chart (Pie)
+    const ctxRisk = document.getElementById('riskChart');
+    if (ctxRisk) {
+        new Chart(ctxRisk, {
+            type: 'pie',
+            data: {
+                labels: {{ chart_risk_labels|safe }},
+                datasets: [{
+                    data: {{ chart_risk_data|safe }},
+                    backgroundColor: [
+                        '#38BDF8', // Low (Sky Blue)
+                        '#F59E0B', // Medium (Amber)
+                        '#F97316', // High (Orange)
+                        '#DC2626'  // Critical (Red)
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#FFFFFF'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    }
+
+    // 4. Monthly Redistribution Volume (Line / Area)
+    const ctxVol = document.getElementById('donationVolumeChart');
+    if (ctxVol) {
+        new Chart(ctxVol, {
+            type: 'line',
+            data: {
+                labels: {{ chart_donations_labels|safe }},
+                datasets: [{
+                    label: 'Kilograms Redistributed',
+                    data: {{ chart_donations_data|safe }},
+                    borderColor: '#F97316',
+                    backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.35,
+                    pointBackgroundColor: '#F97316',
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#F1F5F9' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

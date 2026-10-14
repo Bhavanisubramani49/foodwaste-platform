@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} — FoodWasteAI{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block page_subtitle %}Logistics dispatch, driver contact details, and proof-of-delivery tracking{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="fw-card" style="border-left: 4px solid var(--fw-orange);">
+            <div class="d-flex justify-content-between mb-2">
+                <span class="badge badge-status-pending">Today &bull; 7:30 PM</span>
+                <span class="badge bg-light text-dark border">Pickup Code: #PK-491</span>
+            </div>
+            <h5 class="fw-bold mb-1">Catering Rice & Vegetable Curry (50 portions)</h5>
+            <p class="text-secondary small mb-3"><i class="bi bi-geo-alt me-1 text-danger"></i>Pickup at: 45 Market Square, Banquet Loading Bay 2</p>
+
+            <div class="p-3 rounded-3 mb-3" style="background-color: var(--fw-bg-page); border: 1px solid var(--fw-border-color);">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="stat-icon stat-icon-blue">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                    <div>
+                        <strong class="d-block small">Driver: Rajesh Kumar (Hope Shelter)</strong>
+                        <span class="text-secondary" style="font-size: 0.75rem;">Vehicle: Tata Ace Insulated &bull; Contact: +91 98765 43210</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-fw-primary">Confirm Handover</button>
+                <button class="btn btn-sm btn-fw-secondary">Reschedule</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

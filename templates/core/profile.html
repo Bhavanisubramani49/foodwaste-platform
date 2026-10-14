@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} — FoodWasteAI{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block page_subtitle %}Organization profile, contact points, and verified pickup coordinates{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="fw-card text-center" style="border-top: 4px solid var(--fw-orange);">
+            <div class="sidebar-user-avatar mx-auto mb-3" style="width: 72px; height: 72px; font-size: 2rem;">
+                {% if request.user.is_authenticated %}{{ request.user.username|make_list|first|upper }}{% else %}B{% endif %}
+            </div>
+            <h5 class="fw-bold mb-1">
+                {% if request.user.is_authenticated %}{{ request.user.username }}{% else %}Greenfield Bakery Network{% endif %}
+            </h5>
+            <span class="badge" style="background-color: var(--fw-orange-subtle); color: var(--fw-orange-deep); border: 1px solid var(--fw-orange-border);">
+                Verified Business Partner
+            </span>
+            <p class="text-secondary small mt-3 mb-0">Registered Donor since October 2026</p>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="fw-card">
+            <h5 class="fw-bold mb-3">Organization Profile Details</h5>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold">Business Name</label>
+                    <input type="text" class="form-control" value="Greenfield Bakery Network" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold">Primary Contact</label>
+                    <input type="text" class="form-control" value="Karunya (Operations Manager)" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold">Contact Email</label>
+                    <input type="email" class="form-control" value="operations@greenfieldbakery.com" readonly>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold">Phone Number</label>
+                    <input type="text" class="form-control" value="+91 98765 12340" readonly>
+                </div>
+                <div class="col-12">
+                    <label class="form-label small fw-bold">Physical Dispatch Address</label>
+                    <input type="text" class="form-control" value="12 Greenfield Avenue, Commercial District, Bangalore - 560001" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

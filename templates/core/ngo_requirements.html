@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} — FoodWasteAI{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+{% block page_subtitle %}Register organization food demands to trigger automated surplus matching{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <h4 class="fw-bold mb-1">Active NGO Demand Listings</h4>
+        <p class="text-secondary small mb-0">Demands submitted by verified food banks and shelters.</p>
+    </div>
+    <button class="btn btn-fw-primary">
+        <i class="bi bi-plus-circle me-1"></i> Post New Food Requirement
+    </button>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="fw-card" style="border-left: 4px solid var(--fw-orange);">
+            <div class="d-flex justify-content-between mb-2">
+                <span class="badge bg-light text-dark border">Bakery & Grains</span>
+                <span class="badge badge-risk-high">Priority: High</span>
+            </div>
+            <h5 class="fw-bold mb-1">Daily Bread & Breakfast Staples</h5>
+            <p class="text-secondary small mb-2"><i class="bi bi-building me-1"></i>St. Jude Community Kitchen (Beneficiaries: 120 people)</p>
+            <p class="small text-secondary mb-3">Required quantity: <strong>30 kg daily</strong> | Delivery preferred before 8:00 AM.</p>
+            <span class="badge badge-status-pending">2 Potential Business Matches Found</span>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="fw-card" style="border-left: 4px solid var(--fw-blue);">
+            <div class="d-flex justify-content-between mb-2">
+                <span class="badge bg-light text-dark border">Prepared Meals</span>
+                <span class="badge badge-risk-critical">Priority: Urgent</span>
+            </div>
+            <h5 class="fw-bold mb-1">Cooked Dinners for Night Shelter</h5>
+            <p class="text-secondary small mb-2"><i class="bi bi-building me-1"></i>Downtown Night Relief (Beneficiaries: 85 people)</p>
+            <p class="small text-secondary mb-3">Required quantity: <strong>80 portions</strong> | Pickup available via refrigerated van.</p>
+            <span class="badge badge-status-completed">Matched with Grand Banquet Kitchen</span>
+        </div>
+    </div>
+</div>
+{% endblock %}
