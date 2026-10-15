@@ -1,0 +1,42 @@
+from django.urls import path
+
+from .views import (
+    admin_dashboard,
+    dashboard,
+    donation_request_create,
+    donation_requests,
+    donation_status_update,
+    inventory_create,
+    inventory_delete,
+    inventory_import,
+    inventory_list,
+    inventory_update,
+    leaderboard,
+    login_view,
+    logout_view,
+    profile,
+    register,
+    surplus_list,
+    surplus_listing_create,
+)
+
+urlpatterns = [
+    path('', dashboard, name='dashboard'),
+    path('admin-panel/', admin_dashboard, name='admin_dashboard'),
+    path('accounts/register/', register, name='register'),
+    path('accounts/login/', login_view, name='login'),
+    path('accounts/logout/', logout_view, name='logout'),
+    path('accounts/profile/', profile, name='profile'),
+    path('inventory/', inventory_list, name='inventory_list'),
+    path('inventory/add/', inventory_create, name='inventory_create'),
+    path('inventory/<int:item_id>/edit/', inventory_update, name='inventory_update'),
+    path('inventory/<int:item_id>/delete/', inventory_delete, name='inventory_delete'),
+    path('inventory/import/', inventory_import, name='inventory_import'),
+    path('surplus/', surplus_list, name='surplus_list'),
+    path('surplus/add/', surplus_listing_create, name='surplus_create'),
+    path('surplus/create/', surplus_listing_create),
+    path('donations/', donation_requests, name='donation_requests'),
+    path('donations/request/', donation_request_create, name='donation_request_create'),
+    path('donations/<int:request_id>/update/', donation_status_update, name='donation_status_update'),
+    path('leaderboard/', leaderboard, name='leaderboard'),
+]

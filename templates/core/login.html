@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In · FoodRescue Platform</title>
+
+    <!-- Google Fonts: Bricolage Grotesque & DM Sans Only -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5.3.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}">
+</head>
+<body style="background-color: var(--bg-cream);">
+    <!-- Clean Deep Green Top Navbar -->
+    <nav class="navbar navbar-dark" style="background: var(--surface-sidebar); border-bottom: 1px solid rgba(255,255,255,0.1);">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'core:home' %}">
+                <span class="p-1.5 rounded-1 bg-white bg-opacity-10 text-white d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                    <i class="bi bi-clock-history text-warning"></i>
+                </span>
+                <span>FoodRescue<span class="brand-dot"></span></span>
+            </a>
+            <a href="{% url 'core:home' %}" class="btn btn-outline-light btn-sm" style="border-radius: var(--radius-sm);">
+                <i class="bi bi-arrow-left me-1"></i> Back to Home
+            </a>
+        </div>
+    </nav>
+
+    <!-- Centered Tactile Auth Card -->
+    <div class="container py-5 flex-grow-1 d-flex align-items-center justify-content-center">
+        <div class="col-12 col-md-8 col-lg-5 col-xl-4">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show mb-4 border" style="border-radius: var(--radius-md);" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="card p-4 p-md-4 shadow-sm" style="border-radius: var(--radius-lg); background: var(--surface-card);">
+                <div class="text-center mb-4">
+                    <div class="d-inline-flex p-3 rounded-1 mb-2" style="background: var(--primary-green-subtle); color: var(--primary-green);">
+                        <i class="bi bi-box-arrow-in-right fs-3"></i>
+                    </div>
+                    <h3 class="fw-bold mb-1" style="font-family: var(--font-heading); color: var(--text-primary);">Welcome Back</h3>
+                    <p class="text-muted small">Sign in to manage inventory, forecast expiry, and coordinate surplus.</p>
+                </div>
+
+                <form method="post" action="{% url 'core:login' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small text-dark">Username or Organization ID</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold small text-dark">Account Password</label>
+                        {{ form.password }}
+                        {% if form.password.errors %}
+                            <div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-brand-primary w-100 py-2.5">
+                        <i class="bi bi-shield-check me-1"></i> Sign In to Operations
+                    </button>
+                </form>
+
+                <div class="mt-4 pt-3 border-top text-center">
+                    <p class="small text-muted mb-0">
+                        Don't have a registered account?
+                        <a href="{% url 'core:register' %}" class="fw-semibold text-decoration-none" style="color: var(--primary-green);">
+                            Join Relief Network
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,176 @@
+{% extends 'food_management/base.html' %}
+
+{% block title %}Organization Profile & Badges{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="expiry-chip expiry-chip--safe">
+                <span class="pulse-indicator pulse-indicator--safe"></span> VERIFIED PROFILE
+            </span>
+            <span class="text-muted small">· Accreditation & Sustainability Badges</span>
+        </div>
+        <h2 class="h3 fw-bold mb-0">Organization Profile & Achievements</h2>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Left Column: Edit Profile Form -->
+    <div class="col-lg-6">
+        <div class="card p-4 shadow-sm h-100" style="border-radius: var(--radius-lg);">
+            <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+                <div class="p-3 bg-success-subtle text-success rounded-1 d-flex align-items-center justify-content-center" style="width: 52px; height: 52px;">
+                    <i class="bi bi-building fs-3"></i>
+                </div>
+                <div>
+                    <h4 class="fw-bold mb-0 text-dark" style="font-family: var(--font-heading);">{{ user.username }}</h4>
+                    <span class="badge bg-success-subtle text-success mt-1">{{ profile.get_role_display|default:profile.role|title }}</span>
+                </div>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger small mb-3">
+                        {{ form.non_field_errors|join:', ' }}
+                    </div>
+                {% endif %}
+
+                <div class="d-flex flex-column gap-3 mb-4">
+                    {% for field in form %}
+                    <div>
+                        <label for="{{ field.id_for_label }}" class="form-label small fw-semibold text-dark">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div class="form-text small">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% if field.errors %}
+                            <div class="text-danger small mt-1">{{ field.errors|join:', ' }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="pt-3 border-top">
+                    <button type="submit" class="btn btn-brand-primary px-4 py-2 shadow-sm">
+                        <i class="bi bi-check-lg me-1"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Right Column: Engagement & Illustrated Badges Card -->
+    <div class="col-lg-6">
+        <div class="card p-4 shadow-sm h-100 d-flex flex-column justify-content-between" style="border-radius: var(--radius-lg);">
+            <div>
+                <h4 class="h5 fw-bold mb-2 d-flex align-items-center gap-2 text-dark">
+                    <i class="bi bi-award-fill text-warning"></i> Gamification Tier & Badges
+                </h4>
+                <p class="text-muted small mb-4">
+                    Accredited food recovery recognitions and real-time zero waste streak tracking.
+                </p>
+
+                <!-- Metrics Grid -->
+                <div class="row g-2 mb-4 text-center">
+                    <div class="col-6">
+                        <div class="p-3 bg-white rounded-1 border">
+                            <span class="text-muted small d-block">Mastery Level</span>
+                            <span class="fs-4 fw-bold text-dark font-monospace">Lvl {{ profile.level|default:1 }}</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 bg-white rounded-1 border">
+                            <span class="text-muted small d-block">Impact Points</span>
+                            <span class="fs-4 fw-bold text-success font-monospace">{{ profile.points|default:0 }}</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 bg-white rounded-1 border">
+                            <span class="text-muted small d-block">Active Streak</span>
+                            <strong class="fs-5 text-warning font-monospace">🔥 {{ profile.streak_days|default:14 }} Days</strong>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 bg-white rounded-1 border">
+                            <span class="text-muted small d-block">Account Type</span>
+                            <strong class="fs-6 text-dark">{{ profile.get_role_display|default:profile.role|title }}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Own Illustrated Badges -->
+                <h6 class="fw-bold text-dark mb-3">Earned Sustainability Accreditations</h6>
+                <div class="row g-2 mb-3">
+                    <div class="col-6">
+                        <div class="p-2.5 rounded-1 border d-flex align-items-center gap-2 bg-white">
+                            <div style="width: 36px; height: 36px; flex-shrink: 0;">
+                                <svg viewBox="0 0 64 64" fill="none" width="100%" height="100%">
+                                    <circle cx="32" cy="32" r="28" stroke="#1F4D3A" stroke-width="3"/>
+                                    <path d="M32 18v28M24 26l8-8 8 8" stroke="#1F4D3A" stroke-width="3" stroke-linecap="round"/>
+                                    <circle cx="32" cy="32" r="4" fill="#D97706"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <strong class="d-block text-dark" style="font-size: 0.8rem;">Zero-Waste Guardian</strong>
+                                <small class="text-muted" style="font-size: 0.7rem;">50+ Pts</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="p-2.5 rounded-1 border d-flex align-items-center gap-2 bg-white">
+                            <div style="width: 36px; height: 36px; flex-shrink: 0;">
+                                <svg viewBox="0 0 64 64" fill="none" width="100%" height="100%">
+                                    <rect x="10" y="16" width="44" height="32" rx="4" stroke="#D9381E" stroke-width="3"/>
+                                    <path d="M20 32h24M34 24l8 8-8 8" stroke="#D9381E" stroke-width="3" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <strong class="d-block text-dark" style="font-size: 0.8rem;">Rapid Rescuer</strong>
+                                <small class="text-muted" style="font-size: 0.7rem;">Fast handoff</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="p-2.5 rounded-1 border d-flex align-items-center gap-2 bg-white">
+                            <div style="width: 36px; height: 36px; flex-shrink: 0;">
+                                <svg viewBox="0 0 64 64" fill="none" width="100%" height="100%">
+                                    <path d="M16 28c0 11 7 20 16 20s16-9 16-20H16Z" stroke="#D97706" stroke-width="3"/>
+                                    <path d="M26 20c0-3 3-5 3-7M38 20c0-3 3-5 3-7" stroke="#D97706" stroke-width="2.5" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <strong class="d-block text-dark" style="font-size: 0.8rem;">Community Hearth</strong>
+                                <small class="text-muted" style="font-size: 0.7rem;">500+ meals</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="p-2.5 rounded-1 border d-flex align-items-center gap-2 bg-white">
+                            <div style="width: 36px; height: 36px; flex-shrink: 0;">
+                                <svg viewBox="0 0 64 64" fill="none" width="100%" height="100%">
+                                    <polygon points="32,10 38,24 54,26 42,36 46,52 32,44 18,52 22,36 10,26 26,24" stroke="#1F4D3A" stroke-width="2.5"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <strong class="d-block text-dark" style="font-size: 0.8rem;">Pioneer Streak</strong>
+                                <small class="text-muted" style="font-size: 0.7rem;">14-day record</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-3 border-top mt-3 text-center">
+                <a href="{% url 'leaderboard' %}" class="btn btn-outline-secondary btn-sm px-4" style="border-radius: var(--radius-md);">
+                    <i class="bi bi-trophy me-1"></i> View Full Community Leaderboard &rarr;
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,229 @@
+{% extends 'food_management/base.html' %}
+
+{% block title %}Community Impact Leaderboard & Badges{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="expiry-chip expiry-chip--safe">
+                <span class="pulse-indicator pulse-indicator--safe"></span> COMMUNITY RECOGNITION
+            </span>
+            <span class="text-muted small">· Honoring Food Rescue Champions & Fast Donors</span>
+        </div>
+        <h2 class="h3 fw-bold mb-0">Community Impact Leaderboard</h2>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <a href="{% url 'profile' %}" class="btn btn-brand-primary btn-sm px-3.5 shadow-sm">
+            <i class="bi bi-person-badge me-1"></i> My Profile & Badges
+        </a>
+    </div>
+</div>
+
+<!-- ==========================================
+     STREAK RIBBON & EARNING RULES (Radius: 8px / 12px)
+     ========================================== -->
+<div class="streak-banner d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+    <div class="d-flex align-items-center gap-3">
+        <div class="p-2.5 bg-warning-subtle text-dark rounded-1 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; font-size: 1.5rem;">
+            🔥
+        </div>
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-0.5">
+                <strong class="text-dark fs-6">Active Zero-Waste Streak Engine</strong>
+                <span class="badge bg-warning text-dark font-monospace" style="font-size: 0.72rem;">BONUS +100 PTS</span>
+            </div>
+            <div class="text-muted small">
+                Log fresh batch (+10 pts) · Post urgent lot (+25 pts) · Completed NGO handoff before expiry (+50 pts) · Maintain 7-day streak (+100 pts)
+            </div>
+        </div>
+    </div>
+    <div class="text-end">
+        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1.5" style="font-size: 0.85rem;">
+            Points Verified On-Chain
+        </span>
+    </div>
+</div>
+
+<!-- ==========================================
+     OWN ILLUSTRATED BADGES SHOWCASE (No Emojis!)
+     ========================================== -->
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h4 class="h5 fw-bold mb-0">Platform Badges of Honor</h4>
+            <span class="text-muted small">Custom illustrated recognitions awarded for high-urgency rescue performance</span>
+        </div>
+        <span class="text-muted small">5 Official Accreditations</span>
+    </div>
+
+    <div class="row g-3">
+        <!-- Badge 1: Zero-Waste Guardian -->
+        <div class="col-6 col-md-4 col-lg">
+            <div class="badge-art-card h-100">
+                <div class="badge-illustration" style="background: #E8F0EC;">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="32" cy="32" r="28" stroke="#1F4D3A" stroke-width="2.5" stroke-dasharray="4 2"/>
+                        <path d="M32 14v36M24 22l8-8 8 8M20 32l12-12 12 12" stroke="#1F4D3A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M22 46c0-5.5 4.5-10 10-10s10 4.5 10 10" fill="#1F4D3A" opacity="0.2"/>
+                        <circle cx="32" cy="32" r="4" fill="#D97706"/>
+                    </svg>
+                </div>
+                <strong class="d-block text-dark small" style="line-height: 1.2;">Zero-Waste Guardian</strong>
+                <span class="text-muted" style="font-size: 0.72rem;">500+ kg rescued</span>
+            </div>
+        </div>
+
+        <!-- Badge 2: Rapid Rescuer -->
+        <div class="col-6 col-md-4 col-lg">
+            <div class="badge-art-card h-100">
+                <div class="badge-illustration" style="background: #FDEAE7;">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="8" y="14" width="48" height="36" rx="4" stroke="#D9381E" stroke-width="2.5"/>
+                        <path d="M18 32h28M36 24l8 8-8 8" stroke="#D9381E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="22" cy="46" r="3" fill="#D9381E"/>
+                        <circle cx="42" cy="46" r="3" fill="#D9381E"/>
+                    </svg>
+                </div>
+                <strong class="d-block text-dark small" style="line-height: 1.2;">Rapid Rescuer</strong>
+                <span class="text-muted" style="font-size: 0.72rem;">&lt; 45m handoff</span>
+            </div>
+        </div>
+
+        <!-- Badge 3: Community Hearth -->
+        <div class="col-6 col-md-4 col-lg">
+            <div class="badge-art-card h-100">
+                <div class="badge-illustration" style="background: #FEF3C7;">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14 28c0 13.25 8.95 24 20 24s20-10.75 20-24H14Z" stroke="#D97706" stroke-width="2.5" fill="#FEF3C7"/>
+                        <path d="M26 18c0-3 3-5 3-8M34 18c0-3 3-5 3-8M42 18c0-3 3-5 3-8" stroke="#D97706" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="10" y1="56" x2="54" y2="56" stroke="#D97706" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <strong class="d-block text-dark small" style="line-height: 1.2;">Community Hearth</strong>
+                <span class="text-muted" style="font-size: 0.72rem;">1,000+ meals served</span>
+            </div>
+        </div>
+
+        <!-- Badge 4: Carbon Neutralizer -->
+        <div class="col-6 col-md-4 col-lg">
+            <div class="badge-art-card h-100">
+                <div class="badge-illustration" style="background: #E8F5E9;">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M32 10C20 10 12 24 12 36c0 10 9 18 20 18s20-8 20-18c0-12-8-26-20-26Z" stroke="#2E7D32" stroke-width="2.5"/>
+                        <path d="M32 20v28M32 34c4-4 8-3 10 0M32 40c-4-4-8-3-10 0" stroke="#2E7D32" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <strong class="d-block text-dark small" style="line-height: 1.2;">Carbon Neutralizer</strong>
+                <span class="text-muted" style="font-size: 0.72rem;">2+ tonnes CO₂ saved</span>
+            </div>
+        </div>
+
+        <!-- Badge 5: Pioneer Kitchen -->
+        <div class="col-6 col-md-4 col-lg">
+            <div class="badge-art-card h-100">
+                <div class="badge-illustration" style="background: #F4EFE6;">
+                    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="32,8 40,24 58,26 44,38 48,56 32,46 16,56 20,38 6,26 24,24" stroke="#1F4D3A" stroke-width="2.2" fill="#F4EFE6"/>
+                        <circle cx="32" cy="32" r="6" fill="#1F4D3A"/>
+                    </svg>
+                </div>
+                <strong class="d-block text-dark small" style="line-height: 1.2;">Pioneer Partner</strong>
+                <span class="text-muted" style="font-size: 0.72rem;">14-day streak active</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================
+     TACTILE LEADERBOARD TABLE (Radius: 8px)
+     ========================================== -->
+<div class="card p-0 overflow-hidden shadow-sm" style="border-radius: var(--radius-lg);">
+    <div class="p-3 bg-white border-bottom d-flex justify-content-between align-items-center">
+        <div>
+            <h5 class="fw-bold mb-0 text-dark" style="font-size: 1.05rem;">Top Contributing Organizations</h5>
+            <span class="text-muted small">Live score based on verified surplus postings and collections</span>
+        </div>
+        <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 font-monospace">
+            Active Season 2026
+        </span>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-compact-food align-middle mb-0">
+            <thead>
+                <tr>
+                    <th style="width: 80px;" class="ps-4">Rank</th>
+                    <th>Partner Organization</th>
+                    <th>Account Role</th>
+                    <th>Mastery Tier</th>
+                    <th>Illustrated Badges</th>
+                    <th class="text-end pe-4">Impact Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in leaderboard %}
+                <tr {% if entry.rank == 1 %}class="table-warning bg-opacity-10"{% endif %}>
+                    <td class="ps-4">
+                        {% if entry.rank == 1 %}
+                            <span class="badge bg-warning text-dark px-2.5 py-1.5 rounded-1 fs-6 font-monospace">#1</span>
+                        {% elif entry.rank == 2 %}
+                            <span class="badge bg-secondary text-white px-2 py-1 rounded-1 font-monospace">#2</span>
+                        {% elif entry.rank == 3 %}
+                            <span class="badge bg-light text-dark border px-2 py-1 rounded-1 font-monospace">#3</span>
+                        {% else %}
+                            <span class="text-muted fw-bold ps-1 font-monospace">#{{ entry.rank }}</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <strong class="text-dark fs-6 d-block">{{ entry.name }}</strong>
+                        <span class="text-muted" style="font-size: 0.75rem;"><i class="bi bi-geo-alt me-0.5"></i>Verified Relief Network Member</span>
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-secondary border px-2 py-1">{{ entry.role }}</span>
+                    </td>
+                    <td>
+                        <span class="badge bg-success-subtle text-success px-2 py-1">Level {{ entry.level }}</span>
+                    </td>
+                    <td>
+                        <!-- Illustrated mini badges -->
+                        <div class="d-flex align-items-center gap-1">
+                            <span class="badge bg-white border text-success px-1.5 py-0.5" title="Zero-Waste Guardian">
+                                <i class="bi bi-shield-check"></i> Guardian
+                            </span>
+                            {% if entry.points >= 200 %}
+                            <span class="badge bg-white border text-danger px-1.5 py-0.5" title="Rapid Rescuer">
+                                <i class="bi bi-lightning-charge"></i> Rapid
+                            </span>
+                            {% endif %}
+                            {% if entry.points >= 500 %}
+                            <span class="badge bg-white border text-warning px-1.5 py-0.5" title="Hearth Champion">
+                                <i class="bi bi-heart-pulse"></i> Hearth
+                            </span>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td class="text-end pe-4">
+                        <strong class="fs-5 text-success font-monospace">{{ entry.points }}</strong>
+                        <span class="text-muted small">pts</span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="p-0">
+                        <div class="empty-state-warm py-4 text-center">
+                            <h5>No rankings yet recorded.</h5>
+                            <p class="small text-muted mb-2">Be the first kitchen to post a surplus lot today!</p>
+                            <a href="{% url 'surplus_create' %}" class="btn btn-brand-primary btn-sm px-3">
+                                Post First Surplus Lot
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

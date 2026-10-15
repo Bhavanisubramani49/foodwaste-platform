@@ -1,0 +1,125 @@
+{% extends 'food_management/base.html' %}
+
+{% block title %}Donation Requests & NGO Handoff Pipeline{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="expiry-chip expiry-chip--urgent">
+                <span class="pulse-indicator pulse-indicator--urgent"></span> DISPATCH PIPELINE
+            </span>
+            <span class="text-muted small">· NGO Custody & Immediate Collection Scheduling</span>
+        </div>
+        <h2 class="h3 fw-bold mb-0">Donation Requests & Allocations</h2>
+    </div>
+    <a class="btn btn-brand-primary btn-sm px-3.5 shadow-sm d-flex align-items-center gap-1" href="{% url 'donation_request_create' %}">
+        <i class="bi bi-plus-lg"></i> + Submit New Allocation Request
+    </a>
+</div>
+
+<!-- Authentic Microcopy Ribbon -->
+<div class="urgent-microcopy-banner">
+    <div class="p-2 bg-white rounded-1 border border-warning text-danger d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+        <i class="bi bi-check2-circle fs-5"></i>
+    </div>
+    <div class="flex-grow-1">
+        <div class="microcopy-text">Fast handoffs prevent waste: average pickup completes in 38 minutes.</div>
+        <div class="small text-muted">NGO drivers present pickup PIN upon arrival at the kitchen.</div>
+    </div>
+</div>
+
+<!-- Lifecycle Status Filter -->
+<div class="card p-3 mb-3 card-sm-radius">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div class="d-flex flex-wrap gap-1.5">
+            <a href="{% url 'donation_requests' %}" class="btn btn-sm {% if not status_filter %}btn-dark{% else %}btn-outline-secondary{% endif %}" style="border-radius: var(--radius-sm); font-size: 0.82rem;">
+                All Allocations
+            </a>
+            <a href="{% url 'donation_requests' %}?status=requested" class="btn btn-sm {% if status_filter == 'requested' %}btn-warning text-dark{% else %}btn-outline-warning text-dark{% endif %}" style="border-radius: var(--radius-sm); font-size: 0.82rem;">
+                🟡 Requested
+            </a>
+            <a href="{% url 'donation_requests' %}?status=scheduled" class="btn btn-sm {% if status_filter == 'scheduled' %}btn-success text-white{% else %}btn-outline-success{% endif %}" style="border-radius: var(--radius-sm); font-size: 0.82rem;">
+                🟢 Scheduled
+            </a>
+            <a href="{% url 'donation_requests' %}?status=collected" class="btn btn-sm {% if status_filter == 'collected' %}btn-primary{% else %}btn-outline-secondary{% endif %}" style="border-radius: var(--radius-sm); font-size: 0.82rem;">
+                Collected
+            </a>
+            <a href="{% url 'donation_requests' %}?status=cancelled" class="btn btn-sm {% if status_filter == 'cancelled' %}btn-secondary{% else %}btn-outline-secondary{% endif %}" style="border-radius: var(--radius-sm); font-size: 0.82rem;">
+                Cancelled
+            </a>
+        </div>
+        <span class="small text-muted"><strong>{{ requests|length }}</strong> record(s)</span>
+    </div>
+</div>
+
+<!-- Requests Table Card -->
+<div class="card p-0 overflow-hidden shadow-sm" style="border-radius: var(--radius-lg);">
+    <div class="table-responsive">
+        <table class="table table-compact-food align-middle mb-0">
+            <thead>
+                <tr>
+                    <th class="ps-4">Surplus Batch</th>
+                    <th>Recipient NGO</th>
+                    <th>Requested Qty</th>
+                    <th>Scheduled Pickup</th>
+                    <th>Status</th>
+                    <th class="text-end pe-4">Update Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in requests %}
+                <tr>
+                    <td class="ps-4">
+                        <strong class="d-block text-dark">{{ request.listing.food_name }}</strong>
+                        <span class="text-muted small"><i class="bi bi-geo-alt me-1"></i>{{ request.listing.pickup_location }}</span>
+                    </td>
+                    <td>
+                        <strong class="text-dark">{{ request.ngo_name }}</strong>
+                    </td>
+                    <td>
+                        <strong class="text-success font-monospace">{{ request.requested_quantity }}</strong>
+                        <span class="text-muted small">{{ request.listing.unit }}</span>
+                    </td>
+                    <td>
+                        <span class="small text-dark font-monospace"><i class="bi bi-calendar-event me-1 text-muted"></i>{{ request.pickup_date }}</span>
+                    </td>
+                    <td>
+                        <span class="badge {% if request.status == 'collected' %}bg-success-subtle text-success border border-success-subtle{% elif request.status == 'scheduled' %}bg-warning-subtle text-dark border border-warning-subtle{% elif request.status == 'cancelled' %}bg-secondary-subtle text-secondary border{% else %}bg-danger-subtle text-danger border border-danger-subtle{% endif %} px-2 py-1">
+                            {{ request.status|title }}
+                        </span>
+                    </td>
+                    <td class="text-end pe-4">
+                        <form method="post" action="{% url 'donation_status_update' request.pk %}" class="d-inline-flex gap-1.5 align-items-center">
+                            {% csrf_token %}
+                            <select name="status" class="form-select form-select-sm" style="width: auto; font-size: 0.82rem; border-radius: var(--radius-sm);">
+                                <option value="requested" {% if request.status == 'requested' %}selected{% endif %}>Requested</option>
+                                <option value="scheduled" {% if request.status == 'scheduled' %}selected{% endif %}>Scheduled</option>
+                                <option value="collected" {% if request.status == 'collected' %}selected{% endif %}>Collected</option>
+                                <option value="cancelled" {% if request.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                            </select>
+                            <button class="btn btn-sm btn-brand-primary py-1 px-2.5" style="border-radius: var(--radius-sm);" type="submit">Update</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="p-0">
+                        <div class="empty-state-warm py-5 text-center">
+                            <h4 class="fw-bold">No donation requests pending</h4>
+                            <p class="tagline mb-1">All surplus packages have been routed directly without delay.</p>
+                            <div class="tamil-subtext">Nalla visayam! Food moved efficiently.</div>
+                            <div class="mt-4">
+                                <a href="{% url 'donation_request_create' %}" class="btn btn-brand-primary btn-sm px-3.5 py-1.5">
+                                    <i class="bi bi-plus-lg me-1"></i> Request Food Allocation
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

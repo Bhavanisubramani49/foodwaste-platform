@@ -1,0 +1,4 @@
+# Core framework and dependencies
+django>=5.0
+psycopg[binary]>=3.1
+python-dotenv>=1.0

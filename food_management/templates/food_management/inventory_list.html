@@ -1,0 +1,223 @@
+{% extends 'food_management/base.html' %}
+
+{% block title %}Inventory & Expiry Monitoring{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="expiry-chip expiry-chip--urgent">
+                <span class="pulse-indicator pulse-indicator--urgent"></span> TIME SENSITIVE
+            </span>
+            <span class="text-muted small">· Shelf-Life Depletion & Fast-Track Rotation</span>
+        </div>
+        <h2 class="h3 fw-bold mb-0">Inventory & Expiry Tracker</h2>
+    </div>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary btn-sm px-3 d-flex align-items-center gap-1 shadow-sm" style="border-radius: var(--radius-md);" href="{% url 'inventory_import' %}">
+            <i class="bi bi-file-earmark-arrow-up"></i> Import CSV
+        </a>
+        <a class="btn btn-brand-primary btn-sm px-3.5 d-flex align-items-center gap-1 shadow-sm" href="{% url 'inventory_create' %}">
+            <i class="bi bi-plus-lg"></i> + Add Fresh Batch
+        </a>
+    </div>
+</div>
+
+<!-- Authentic Microcopy Urgent Banner -->
+<div class="urgent-microcopy-banner">
+    <div class="p-2 bg-white rounded-1 border border-warning text-danger d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+        <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+    </div>
+    <div class="flex-grow-1">
+        <div class="microcopy-text">3 kg biryani expires in 4 hrs. 2 NGOs nearby.</div>
+        <div class="small text-muted">Immediate action required: Convert to surplus lot for 1-click NGO reservation before shelf-life closes.</div>
+    </div>
+    <a href="{% url 'surplus_create' %}" class="btn btn-brand-urgent btn-sm px-3 py-1 text-nowrap">
+        <i class="bi bi-lightning-charge-fill me-1"></i> Post Surplus
+    </a>
+</div>
+
+<!-- Compact Filter Bar -->
+<div class="card p-3 mb-3 card-sm-radius">
+    <form method="get" class="row g-2 align-items-center">
+        <div class="col-md-5">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                <input type="text" name="q" value="{{ query }}" class="form-control border-start-0" placeholder="Filter by item name (e.g. Biryani, Rice, Milk, Paneer)...">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-hourglass-split"></i></span>
+                <select name="risk" class="form-select border-start-0">
+                    <option value="">All Expiry Risk Levels</option>
+                    <option value="critical" {% if risk == 'critical' %}selected{% endif %}>🔴 Critical (&le; 24h - 3 days)</option>
+                    <option value="high" {% if risk == 'high' %}selected{% endif %}>🟠 High (&le; 7 days)</option>
+                    <option value="medium" {% if risk == 'medium' %}selected{% endif %}>🟡 Medium (&le; 14 days)</option>
+                    <option value="low" {% if risk == 'low' %}selected{% endif %}>🟢 Safe / Stable</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3 d-flex gap-2">
+            <button type="submit" class="btn btn-brand-primary btn-sm w-100 py-1.5">
+                <i class="bi bi-funnel me-1"></i> Apply Filter
+            </button>
+            {% if query or risk %}
+                <a href="{% url 'inventory_list' %}" class="btn btn-outline-secondary btn-sm px-2.5 py-1.5" title="Reset Filters">
+                    <i class="bi bi-x-lg"></i>
+                </a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<!-- Compact Inventory Table (Sorted by Urgency) -->
+<div class="card p-0 overflow-hidden shadow-sm" style="border-radius: var(--radius-lg);">
+    <div class="table-responsive">
+        <table class="table table-compact-food align-middle">
+            <thead>
+                <tr>
+                    <th style="width: 28%;">Item & Category</th>
+                    <th style="width: 14%;">Remaining Stock</th>
+                    <th style="width: 22%;">Expiry Countdown & Depletion</th>
+                    <th style="width: 14%;">Risk Level</th>
+                    <th style="width: 10%;">Storage</th>
+                    <th class="text-end pe-4" style="width: 12%;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr class="{% if item.days_until_expiry <= 2 %}row-urgent{% elif item.days_until_expiry <= 5 %}row-warning{% endif %}">
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            {% if item.days_until_expiry <= 2 %}
+                                <span class="pulse-indicator pulse-indicator--urgent" title="Urgent: Expiring Soon"></span>
+                            {% elif item.days_until_expiry <= 5 %}
+                                <span class="pulse-indicator pulse-indicator--amber" title="Warning: Near Expiry"></span>
+                            {% else %}
+                                <span class="pulse-indicator pulse-indicator--safe" title="Stock Safe"></span>
+                            {% endif %}
+                            <div>
+                                <strong class="text-dark d-block" style="font-size: 0.95rem;">{{ item.name }}</strong>
+                                <span class="badge bg-white text-secondary border px-1.5 py-0.5" style="font-size: 0.72rem;">{{ item.category }}</span>
+                                {% if item.notes %}
+                                    <span class="text-muted small ms-1" style="font-size: 0.75rem;">· {{ item.notes|truncatechars:35 }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>
+                        <strong class="text-dark fs-6">{{ item.quantity }}</strong>
+                        <span class="text-muted small">{{ item.unit }}</span>
+                    </td>
+
+                    <td>
+                        <div class="d-flex flex-column gap-1" style="max-width: 210px;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                {% if item.days_until_expiry <= 0 %}
+                                    <span class="expiry-chip expiry-chip--urgent">
+                                        <i class="bi bi-clock-fill"></i> EXPIRES TODAY
+                                    </span>
+                                {% elif item.days_until_expiry == 1 %}
+                                    <span class="expiry-chip expiry-chip--urgent">
+                                        <i class="bi bi-clock-history"></i> 24 hrs left
+                                    </span>
+                                {% elif item.days_until_expiry <= 3 %}
+                                    <span class="expiry-chip expiry-chip--urgent">
+                                        <i class="bi bi-hourglass-bottom"></i> {{ item.days_until_expiry }}d left
+                                    </span>
+                                {% elif item.days_until_expiry <= 7 %}
+                                    <span class="expiry-chip expiry-chip--warning">
+                                        <i class="bi bi-hourglass-split"></i> {{ item.days_until_expiry }}d left
+                                    </span>
+                                {% else %}
+                                    <span class="expiry-chip expiry-chip--safe">
+                                        <i class="bi bi-calendar-check"></i> {{ item.days_until_expiry }}d left
+                                    </span>
+                                {% endif %}
+                                <span class="text-muted" style="font-size: 0.75rem;">{{ item.expiry_date|date:"d M" }}</span>
+                            </div>
+
+                            <!-- Expiry Meter Depletion Bar Animation -->
+                            <div class="expiry-meter">
+                                {% if item.days_until_expiry <= 2 %}
+                                    <div class="expiry-meter-fill urgent" style="width: 85%;"></div>
+                                {% elif item.days_until_expiry <= 5 %}
+                                    <div class="expiry-meter-fill warning" style="width: 55%;"></div>
+                                {% else %}
+                                    <div class="expiry-meter-fill safe" style="width: 25%;"></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>
+                        {% if item.risk_level == 'critical' %}
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">Critical (&le;3d)</span>
+                        {% elif item.risk_level == 'high' %}
+                            <span class="badge bg-warning-subtle text-dark border border-warning-subtle px-2 py-1">High Risk</span>
+                        {% elif item.risk_level == 'medium' %}
+                            <span class="badge bg-warning-subtle text-muted border px-2 py-1">Moderate</span>
+                        {% else %}
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">Stable</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <span class="small text-muted d-block text-truncate" style="max-width: 110px;" title="{{ item.storage_location }}">
+                            <i class="bi bi-geo-alt me-1"></i>{{ item.storage_location }}
+                        </span>
+                    </td>
+
+                    <td class="text-end pe-4">
+                        <div class="d-inline-flex gap-1">
+                            <a href="{% url 'surplus_create' %}" class="btn btn-sm btn-outline-warning text-dark py-1 px-2" title="Transfer Lot to Surplus Marketplace" style="border-radius: var(--radius-sm); font-size: 0.78rem;">
+                                <i class="bi bi-lightning-charge"></i>
+                            </a>
+                            <a href="{% url 'inventory_update' item.pk %}" class="btn btn-sm btn-outline-secondary py-1 px-2" title="Edit Batch" style="border-radius: var(--radius-sm); font-size: 0.78rem;">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <form method="post" action="{% url 'inventory_delete' item.pk %}" class="d-inline" onsubmit="return confirm('Remove batch {{ item.name }}?');">
+                                {% csrf_token %}
+                                <button class="btn btn-sm btn-outline-danger py-1 px-2" type="submit" title="Delete Batch" style="border-radius: var(--radius-sm); font-size: 0.78rem;">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <!-- Custom Authentic Empty State -->
+                <tr>
+                    <td colspan="6" class="p-0">
+                        <div class="empty-state-warm py-5 px-3">
+                            <div class="mb-3">
+                                <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#1F4D3A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="mx-auto">
+                                    <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10S2 17.523 2 12A10 10 0 0 1 12 2z"></path>
+                                    <path d="m9 12 2 2 4-4"></path>
+                                    <path d="M12 6v2"></path>
+                                    <path d="M12 16v2"></path>
+                                </svg>
+                            </div>
+                            <h4 class="fw-bold">Inventory empty. Nalla visayam, waste illa.</h4>
+                            <p class="tagline mb-1">All kitchen stock has been utilized or safely redirected. Zero active waste identified!</p>
+                            <div class="tamil-subtext">✨ No food nearing expiry right now. Keep up the high efficiency streak.</div>
+                            <div class="mt-4 d-flex justify-content-center gap-2">
+                                <a href="{% url 'inventory_create' %}" class="btn btn-brand-primary btn-sm px-3 py-1.5">
+                                    <i class="bi bi-plus-lg me-1"></i> Log Fresh Inventory
+                                </a>
+                                <a href="{% url 'inventory_import' %}" class="btn btn-outline-secondary btn-sm px-3 py-1.5" style="border-radius: var(--radius-md);">
+                                    <i class="bi bi-upload me-1"></i> Bulk Upload CSV
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

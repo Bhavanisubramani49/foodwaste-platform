@@ -1,0 +1,88 @@
+{% extends 'food_management/base.html' %}
+
+{% block title %}Bulk Import Inventory CSV{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-3">
+    <div class="col-lg-8">
+        <div class="card p-4 p-md-5 shadow-sm">
+            <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+                <div class="p-3 bg-secondary-subtle text-dark rounded-3">
+                    <i class="bi bi-file-earmark-spreadsheet fs-3"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold mb-0">Bulk CSV Inventory Import</h3>
+                    <p class="text-muted small mb-0">Batch sync multiple food items, quantities, and expiration dates</p>
+                </div>
+            </div>
+
+            <!-- CSV Schema Info Box -->
+            <div class="p-3 bg-light rounded-3 border mb-4">
+                <h6 class="fw-bold text-dark mb-2"><i class="bi bi-info-circle me-1 text-primary"></i> Required CSV Format & Column Headers</h6>
+                <p class="small text-muted mb-2">
+                    Ensure your spreadsheet has a header row with the following column names (in lowercase):
+                </p>
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered bg-white small mb-0 text-center">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>name</th>
+                                <th>category</th>
+                                <th>quantity</th>
+                                <th>unit</th>
+                                <th>purchase_date</th>
+                                <th>expiry_date</th>
+                                <th>storage_location</th>
+                                <th>notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="text-muted">
+                                <td>Apples</td>
+                                <td>Produce</td>
+                                <td>25.0</td>
+                                <td>kg</td>
+                                <td>2026-10-10</td>
+                                <td>2026-10-17</td>
+                                <td>Cold Storage A</td>
+                                <td>Crisp Gala</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="form-text small mt-2">
+                    <i class="bi bi-calendar3 me-1"></i> Dates must be formatted as <code>YYYY-MM-DD</code>.
+                </div>
+            </div>
+
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger small mb-3">
+                        {{ form.non_field_errors|join:', ' }}
+                    </div>
+                {% endif %}
+
+                <div class="mb-4">
+                    {% for field in form %}
+                        <label for="{{ field.id_for_label }}" class="form-label small fw-semibold text-dark">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="text-danger small mt-1">{{ field.errors|join:', ' }}</div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <div class="pt-3 border-top d-flex gap-2">
+                    <button type="submit" class="btn btn-brand-primary px-4 py-2 shadow-sm">
+                        <i class="bi bi-upload me-1"></i> Upload and Import Records
+                    </button>
+                    <a href="{% url 'inventory_list' %}" class="btn btn-outline-secondary px-4 py-2">
+                        Back to Inventory
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
