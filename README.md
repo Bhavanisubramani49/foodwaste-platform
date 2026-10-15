@@ -26,6 +26,10 @@ The platform supports inventory tracking, expiry alerts, waste-risk analysis, su
 - **Milestone 3:** NGO marketplace and analytics dashboard
 - **Final Phase:** Integration, testing, and documentation
 
+  ## Dashboard Preview
+
+![FoodWasteAI Dashboard](dashboard.png)
+
 ## Project Status
 Development is in progress. Features are being implemented and tested incrementally.
 
