@@ -22,3 +22,7 @@ db.sqlite3-journal
 Thumbs.db
 .agents/
 skills-lock.json
+# AI dataset and generated model files
+data/raw/
+data/processed/
+ml_service/models/
