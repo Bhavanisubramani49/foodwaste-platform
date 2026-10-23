@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 from django.db.models import Q, Sum
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -62,6 +63,33 @@ def dashboard(request):
 def admin_dashboard(request):
     inventory = InventoryItem.objects.all()
     recent_requests = DonationRequest.objects.select_related('listing').order_by('-created_at')[:5]
+
+    search_user = request.GET.get('search_user', '').strip()
+    active_tab = request.GET.get('tab', 'restaurants')
+
+    # Fetch food providers / restaurants and NGOs
+    business_profiles = UserProfile.objects.filter(role='business').select_related('user').order_by('-created_at')
+    ngo_profiles = UserProfile.objects.filter(role='ngo').select_related('user').order_by('-created_at')
+
+    if search_user:
+        business_profiles = business_profiles.filter(
+            Q(user__username__icontains=search_user) |
+            Q(organization_name__icontains=search_user) |
+            Q(user__email__icontains=search_user) |
+            Q(phone_number__icontains=search_user)
+        )
+        ngo_profiles = ngo_profiles.filter(
+            Q(user__username__icontains=search_user) |
+            Q(organization_name__icontains=search_user) |
+            Q(user__email__icontains=search_user) |
+            Q(phone_number__icontains=search_user)
+        )
+
+    total_businesses = UserProfile.objects.filter(role='business').count()
+    total_ngos = UserProfile.objects.filter(role='ngo').count()
+    total_users = User.objects.filter(is_superuser=False).count()
+    suspended_users = User.objects.filter(is_active=False).count()
+
     summary = {
         'total_inventory': inventory.count(),
         'near_expiry': inventory.filter(expiry_date__lte=date.today() + timedelta(days=7)).count(),
@@ -76,8 +104,54 @@ def admin_dashboard(request):
         'donation_count': summary['donation_requests'],
         'recent_requests': recent_requests,
         'leaderboard': get_leaderboard(limit=5),
+        'business_profiles': business_profiles,
+        'ngo_profiles': ngo_profiles,
+        'search_user': search_user,
+        'active_tab': active_tab,
+        'total_businesses': total_businesses,
+        'total_ngos': total_ngos,
+        'total_users': total_users,
+        'suspended_users': suspended_users,
     }
     return render(request, 'food_management/admin_dashboard.html', context)
+
+
+@role_required('admin')
+def admin_user_toggle_status(request, user_id):
+    if request.method == 'POST':
+        target_user = get_object_or_404(User, pk=user_id)
+        if target_user == request.user:
+            messages.error(request, 'You cannot suspend your own administrative account.')
+            return redirect('admin_dashboard')
+
+        if target_user.is_superuser and not request.user.is_superuser:
+            messages.error(request, 'Permission denied: Cannot modify a superuser account.')
+            return redirect('admin_dashboard')
+
+        target_user.is_active = not target_user.is_active
+        target_user.save()
+
+        status_text = "reactivated" if target_user.is_active else "suspended / deactivated due to malpractice"
+        messages.success(request, f"User account '{target_user.username}' has been {status_text}.")
+    return redirect('admin_dashboard')
+
+
+@role_required('admin')
+def admin_user_delete(request, user_id):
+    if request.method == 'POST':
+        target_user = get_object_or_404(User, pk=user_id)
+        if target_user == request.user:
+            messages.error(request, 'You cannot delete your own administrative account.')
+            return redirect('admin_dashboard')
+
+        if target_user.is_superuser and not request.user.is_superuser:
+            messages.error(request, 'Permission denied: Cannot delete a superuser account.')
+            return redirect('admin_dashboard')
+
+        username = target_user.username
+        target_user.delete()
+        messages.success(request, f"User account '{username}' has been permanently removed due to malpractice / policy violation.")
+    return redirect('admin_dashboard')
 
 
 def inventory_list(request):

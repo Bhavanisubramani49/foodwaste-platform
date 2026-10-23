@@ -123,4 +123,193 @@
         </div>
     </div>
 </div>
+
+<!-- User Account Management Section (Food Providers & NGOs) -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card shadow-sm border-0 overflow-hidden">
+            <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div>
+                    <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-people-fill text-primary me-2"></i>Stakeholder Account Moderation</h5>
+                    <small class="text-muted">Manage food providers, restaurant partners, and recipient NGOs. Suspend or remove accounts violating platform policies.</small>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-primary-subtle text-primary">{{ total_businesses }} Businesses</span>
+                    <span class="badge bg-success-subtle text-success">{{ total_ngos }} NGOs</span>
+                    {% if suspended_users %}
+                        <span class="badge bg-danger-subtle text-danger">{{ suspended_users }} Suspended</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="p-3 bg-light border-bottom">
+                <form method="get" class="row g-2 align-items-center">
+                    <input type="hidden" name="tab" value="{{ active_tab }}">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                            <input type="text" name="search_user" class="form-control" placeholder="Search by name, org, email..." value="{{ search_user }}">
+                            {% if search_user %}
+                                <a href="?tab={{ active_tab }}" class="btn btn-outline-secondary">Clear</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary btn-sm px-3">Search</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tabs -->
+            <ul class="nav nav-tabs px-3 pt-2 bg-light border-bottom" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link {% if active_tab == 'restaurants' or not active_tab %}active fw-semibold{% endif %}" href="?tab=restaurants{% if search_user %}&search_user={{ search_user }}{% endif %}">
+                        <i class="bi bi-shop me-1"></i> Food Providers & Restaurants ({{ business_profiles|length }})
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if active_tab == 'ngos' %}active fw-semibold{% endif %}" href="?tab=ngos{% if search_user %}&search_user={{ search_user }}{% endif %}">
+                        <i class="bi bi-heart-pulse me-1"></i> NGOs & Pantries ({{ ngo_profiles|length }})
+                    </a>
+                </li>
+            </ul>
+
+            <div class="table-responsive">
+                {% if active_tab == 'ngos' %}
+                    <!-- NGOs Table -->
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">Organization / User</th>
+                                <th>Contact Information</th>
+                                <th>Reputation / Impact</th>
+                                <th>Account Status</th>
+                                <th class="pe-4 text-end">Administrative Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in ngo_profiles %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="fw-bold text-dark">{{ p.organization_name|default:p.user.username }}</div>
+                                    <div class="small text-muted">@{{ p.user.username }} · Joined {{ p.created_at|date:"M d, Y" }}</div>
+                                </td>
+                                <td>
+                                    <div class="small text-dark"><i class="bi bi-envelope me-1"></i>{{ p.user.email|default:"No email" }}</div>
+                                    <div class="small text-muted"><i class="bi bi-telephone me-1"></i>{{ p.phone_number|default:"No phone" }}</div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-success-subtle text-success">{{ p.points }} pts</span>
+                                    <span class="badge bg-light text-secondary border">Level {{ p.level }}</span>
+                                </td>
+                                <td>
+                                    {% if p.user.is_active %}
+                                        <span class="badge bg-success-subtle text-success"><i class="bi bi-check-circle me-1"></i>Active</span>
+                                    {% else %}
+                                        <span class="badge bg-danger-subtle text-danger"><i class="bi bi-slash-circle me-1"></i>Suspended</span>
+                                    {% endif %}
+                                </td>
+                                <td class="pe-4 text-end">
+                                    <div class="btn-group btn-group-sm">
+                                        <form method="post" action="{% url 'admin_user_toggle_status' p.user.id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            {% if p.user.is_active %}
+                                                <button type="submit" class="btn btn-outline-warning btn-sm" title="Suspend account" onclick="return confirm('Suspend {{ p.user.username }}?');">
+                                                    <i class="bi bi-pause-circle me-1"></i> Suspend
+                                                </button>
+                                            {% else %}
+                                                <button type="submit" class="btn btn-outline-success btn-sm" title="Reactivate account">
+                                                    <i class="bi bi-play-circle me-1"></i> Reactivate
+                                                </button>
+                                            {% endif %}
+                                        </form>
+                                        <form method="post" action="{% url 'admin_user_delete' p.user.id %}" class="d-inline ms-1">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" title="Permanently delete account" onclick="return confirm('Permanently remove {{ p.user.username }}? This cannot be undone.');">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-muted">
+                                    <i class="bi bi-inbox fs-4 d-block mb-1"></i> No NGO accounts found.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <!-- Food Providers Table -->
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">Business / Outlet</th>
+                                <th>Contact Information</th>
+                                <th>Reputation / Impact</th>
+                                <th>Account Status</th>
+                                <th class="pe-4 text-end">Administrative Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in business_profiles %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="fw-bold text-dark">{{ p.organization_name|default:p.user.username }}</div>
+                                    <div class="small text-muted">@{{ p.user.username }} · Joined {{ p.created_at|date:"M d, Y" }}</div>
+                                </td>
+                                <td>
+                                    <div class="small text-dark"><i class="bi bi-envelope me-1"></i>{{ p.user.email|default:"No email" }}</div>
+                                    <div class="small text-muted"><i class="bi bi-telephone me-1"></i>{{ p.phone_number|default:"No phone" }}</div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-success-subtle text-success">{{ p.points }} pts</span>
+                                    <span class="badge bg-light text-secondary border">Level {{ p.level }}</span>
+                                </td>
+                                <td>
+                                    {% if p.user.is_active %}
+                                        <span class="badge bg-success-subtle text-success"><i class="bi bi-check-circle me-1"></i>Active</span>
+                                    {% else %}
+                                        <span class="badge bg-danger-subtle text-danger"><i class="bi bi-slash-circle me-1"></i>Suspended</span>
+                                    {% endif %}
+                                </td>
+                                <td class="pe-4 text-end">
+                                    <div class="btn-group btn-group-sm">
+                                        <form method="post" action="{% url 'admin_user_toggle_status' p.user.id %}" class="d-inline">
+                                            {% csrf_token %}
+                                            {% if p.user.is_active %}
+                                                <button type="submit" class="btn btn-outline-warning btn-sm" title="Suspend account" onclick="return confirm('Suspend {{ p.user.username }}?');">
+                                                    <i class="bi bi-pause-circle me-1"></i> Suspend
+                                                </button>
+                                            {% else %}
+                                                <button type="submit" class="btn btn-outline-success btn-sm" title="Reactivate account">
+                                                    <i class="bi bi-play-circle me-1"></i> Reactivate
+                                                </button>
+                                            {% endif %}
+                                        </form>
+                                        <form method="post" action="{% url 'admin_user_delete' p.user.id %}" class="d-inline ms-1">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" title="Permanently delete account" onclick="return confirm('Permanently remove {{ p.user.username }}? This cannot be undone.');">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="5" class="text-center py-4 text-muted">
+                                    <i class="bi bi-inbox fs-4 d-block mb-1"></i> No food provider accounts found.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

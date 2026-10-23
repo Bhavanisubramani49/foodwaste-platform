@@ -2,6 +2,8 @@ from django.urls import path
 
 from .views import (
     admin_dashboard,
+    admin_user_toggle_status,
+    admin_user_delete,
     dashboard,
     donation_request_create,
     donation_requests,
@@ -39,4 +41,6 @@ urlpatterns = [
     path('donations/request/', donation_request_create, name='donation_request_create'),
     path('donations/<int:request_id>/update/', donation_status_update, name='donation_status_update'),
     path('leaderboard/', leaderboard, name='leaderboard'),
-]
+    path('admin/users/<int:user_id>/toggle/', admin_user_toggle_status, name='admin_user_toggle_status'),
+    path('admin/users/<int:user_id>/delete/', admin_user_delete, name='admin_user_delete'),
+    ]

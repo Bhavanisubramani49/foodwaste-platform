@@ -1,0 +1,134 @@
+{
+  "dairy": {
+    "test_days": 14,
+    "unit": "kg",
+    "models": {
+      "naive": {
+        "mae": 8.73,
+        "rmse": 12.73,
+        "mape": 20.39
+      },
+      "prophet": {
+        "mae": 5.78,
+        "rmse": 6.52,
+        "mape": 13.33
+      },
+      "lstm": {
+        "mae": 5.53,
+        "rmse": 8.08,
+        "mape": 15.31
+      }
+    },
+    "best_model": "prophet"
+  },
+  "bakery": {
+    "test_days": 14,
+    "unit": "kg",
+    "models": {
+      "naive": {
+        "mae": 12.42,
+        "rmse": 15.48,
+        "mape": 20.31
+      },
+      "prophet": {
+        "mae": 20.8,
+        "rmse": 22.35,
+        "mape": 32.85
+      },
+      "lstm": {
+        "mae": 7.79,
+        "rmse": 10.15,
+        "mape": 14.33
+      }
+    },
+    "best_model": "lstm"
+  },
+  "produce": {
+    "test_days": 14,
+    "unit": "kg",
+    "models": {
+      "naive": {
+        "mae": 11.23,
+        "rmse": 14.45,
+        "mape": 14.22
+      },
+      "prophet": {
+        "mae": 17.38,
+        "rmse": 18.5,
+        "mape": 24.41
+      },
+      "lstm": {
+        "mae": 10.36,
+        "rmse": 13.42,
+        "mape": 13.42
+      }
+    },
+    "best_model": "lstm"
+  },
+  "meat": {
+    "test_days": 14,
+    "unit": "kg",
+    "models": {
+      "naive": {
+        "mae": 5.89,
+        "rmse": 6.92,
+        "mape": 20.12
+      },
+      "prophet": {
+        "mae": 5.25,
+        "rmse": 6.81,
+        "mape": 15.44
+      },
+      "lstm": {
+        "mae": 5.99,
+        "rmse": 7.57,
+        "mape": 18.17
+      }
+    },
+    "best_model": "prophet"
+  },
+  "packaged": {
+    "test_days": 14,
+    "unit": "units",
+    "models": {
+      "naive": {
+        "mae": 6.84,
+        "rmse": 8.83,
+        "mape": 14.07
+      },
+      "prophet": {
+        "mae": 4.33,
+        "rmse": 5.43,
+        "mape": 9.57
+      },
+      "lstm": {
+        "mae": 5.62,
+        "rmse": 6.85,
+        "mape": 12.71
+      }
+    },
+    "best_model": "prophet"
+  },
+  "beverages": {
+    "test_days": 14,
+    "unit": "litres",
+    "models": {
+      "naive": {
+        "mae": 5.41,
+        "rmse": 6.43,
+        "mape": 14.49
+      },
+      "prophet": {
+        "mae": 4.06,
+        "rmse": 5.46,
+        "mape": 10.03
+      },
+      "lstm": {
+        "mae": 4.16,
+        "rmse": 4.79,
+        "mape": 10.77
+      }
+    },
+    "best_model": "lstm"
+  }
+}

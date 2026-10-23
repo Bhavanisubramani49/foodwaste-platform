@@ -1,0 +1,91 @@
+name,category,quantity,unit,purchase_date,expiry_date,storage_location,risk_level,notes
+Whole Milk 1L (biz_001),dairy,28.58,kg,2026-10-17,2026-10-30,Cold Room A (4°C),medium,Batch generated for biz_001. Shelf life: 10d. Storage: Cold Room A (4°C).
+Greek Yogurt (biz_001),dairy,7.94,kg,2026-10-16,2026-10-26,Cold Room A (4°C),high,Batch generated for biz_001. Shelf life: 10d. Storage: Cold Room A (4°C).
+Cheddar Cheese (biz_001),dairy,26.62,kg,2026-10-19,2026-10-31,Cold Room A (4°C),medium,Batch generated for biz_001. Shelf life: 10d. Storage: Cold Room A (4°C).
+Butter 250g (biz_001),dairy,15.41,kg,2026-10-15,2026-10-25,Cold Room A (4°C),high,Batch generated for biz_001. Shelf life: 10d. Storage: Cold Room A (4°C).
+Paneer (biz_001),dairy,27.61,kg,2026-10-19,2026-10-29,Cold Room A (4°C),medium,Batch generated for biz_001. Shelf life: 10d. Storage: Cold Room A (4°C).
+Sourdough Loaf (biz_001),bakery,15.38,kg,2026-10-23,2026-10-26,Bakery Rack 1,high,Batch generated for biz_001. Shelf life: 3d. Storage: Bakery Rack 1.
+Butter Croissant (biz_001),bakery,9.5,kg,2026-10-23,2026-10-26,Bakery Rack 1,high,Batch generated for biz_001. Shelf life: 3d. Storage: Bakery Rack 1.
+Whole Wheat Bread (biz_001),bakery,34.49,kg,2026-10-17,2026-10-24,Bakery Rack 1,high,Batch generated for biz_001. Shelf life: 3d. Storage: Bakery Rack 1.
+Baguette (biz_001),bakery,42.15,kg,2026-10-23,2026-10-26,Bakery Rack 1,high,Batch generated for biz_001. Shelf life: 3d. Storage: Bakery Rack 1.
+Muffins 4-pk (biz_001),bakery,14.21,kg,2026-10-18,2026-10-24,Bakery Rack 1,high,Batch generated for biz_001. Shelf life: 3d. Storage: Bakery Rack 1.
+Tomatoes (biz_001),produce,11.7,kg,2026-10-19,2026-10-26,Produce Cooler B,high,Batch generated for biz_001. Shelf life: 7d. Storage: Produce Cooler B.
+Bananas (biz_001),produce,42.39,kg,2026-10-18,2026-10-25,Produce Cooler B,high,Batch generated for biz_001. Shelf life: 7d. Storage: Produce Cooler B.
+Spinach Bunch (biz_001),produce,25.24,kg,2026-10-19,2026-10-25,Produce Cooler B,high,Batch generated for biz_001. Shelf life: 7d. Storage: Produce Cooler B.
+Bell Peppers (biz_001),produce,32.14,kg,2026-10-19,2026-10-26,Produce Cooler B,high,Batch generated for biz_001. Shelf life: 7d. Storage: Produce Cooler B.
+Apples Gala (biz_001),produce,32.43,kg,2026-10-16,2026-10-23,Produce Cooler B,high,Batch generated for biz_001. Shelf life: 7d. Storage: Produce Cooler B.
+Chicken Breast (biz_001),meat,18.27,kg,2026-10-17,2026-10-22,Deep Freezer / Chiller (-2°C),critical,Batch generated for biz_001. Shelf life: 5d. Storage: Deep Freezer / Chiller (-2°C).
+Minced Beef (biz_001),meat,21.69,kg,2026-10-21,2026-10-26,Deep Freezer / Chiller (-2°C),high,Batch generated for biz_001. Shelf life: 5d. Storage: Deep Freezer / Chiller (-2°C).
+Pork Chops (biz_001),meat,21.68,kg,2026-10-17,2026-10-22,Deep Freezer / Chiller (-2°C),critical,Batch generated for biz_001. Shelf life: 5d. Storage: Deep Freezer / Chiller (-2°C).
+Salmon Fillet (biz_001),meat,10.25,kg,2026-10-17,2026-10-27,Deep Freezer / Chiller (-2°C),medium,Batch generated for biz_001. Shelf life: 5d. Storage: Deep Freezer / Chiller (-2°C).
+Lamb Stew Cut (biz_001),meat,7.13,kg,2026-10-21,2026-10-26,Deep Freezer / Chiller (-2°C),high,Batch generated for biz_001. Shelf life: 5d. Storage: Deep Freezer / Chiller (-2°C).
+Pasta Penne 500g (biz_001),packaged,29.61,units,2026-04-28,2026-10-25,Dry Storage Shelf C,high,Batch generated for biz_001. Shelf life: 180d. Storage: Dry Storage Shelf C.
+Canned Tomatoes (biz_001),packaged,27.15,units,2026-04-29,2026-10-26,Dry Storage Shelf C,high,Batch generated for biz_001. Shelf life: 180d. Storage: Dry Storage Shelf C.
+Basmati Rice 1kg (biz_001),packaged,23.06,units,2026-10-17,2027-03-18,Dry Storage Shelf C,low,Batch generated for biz_001. Shelf life: 180d. Storage: Dry Storage Shelf C.
+Olive Oil 500ml (biz_001),packaged,26.05,units,2026-04-25,2026-10-22,Dry Storage Shelf C,critical,Batch generated for biz_001. Shelf life: 180d. Storage: Dry Storage Shelf C.
+Cereal Flakes (biz_001),packaged,22.96,units,2026-05-12,2026-11-08,Dry Storage Shelf C,medium,Batch generated for biz_001. Shelf life: 180d. Storage: Dry Storage Shelf C.
+Orange Juice 1L (biz_001),beverages,18.09,litres,2026-10-18,2027-01-04,Beverage Display Aisle,low,Batch generated for biz_001. Shelf life: 90d. Storage: Beverage Display Aisle.
+Sparkling Water 6-pk (biz_001),beverages,5.54,litres,2026-09-09,2026-12-08,Beverage Display Aisle,low,Batch generated for biz_001. Shelf life: 90d. Storage: Beverage Display Aisle.
+Cold Brew Coffee (biz_001),beverages,9.95,litres,2026-08-13,2026-11-11,Beverage Display Aisle,medium,Batch generated for biz_001. Shelf life: 90d. Storage: Beverage Display Aisle.
+Green Tea 500ml (biz_001),beverages,10.41,litres,2026-09-20,2026-12-19,Beverage Display Aisle,low,Batch generated for biz_001. Shelf life: 90d. Storage: Beverage Display Aisle.
+Lemonade (biz_001),beverages,11.55,litres,2026-07-23,2026-10-21,Beverage Display Aisle,critical,Batch generated for biz_001. Shelf life: 90d. Storage: Beverage Display Aisle.
+Whole Milk 1L (biz_002),dairy,20.44,kg,2026-10-13,2026-10-23,Cold Room A (4°C),high,Batch generated for biz_002. Shelf life: 10d. Storage: Cold Room A (4°C).
+Greek Yogurt (biz_002),dairy,16.37,kg,2026-10-19,2026-10-30,Cold Room A (4°C),medium,Batch generated for biz_002. Shelf life: 10d. Storage: Cold Room A (4°C).
+Cheddar Cheese (biz_002),dairy,6.01,kg,2026-10-17,2026-10-30,Cold Room A (4°C),medium,Batch generated for biz_002. Shelf life: 10d. Storage: Cold Room A (4°C).
+Butter 250g (biz_002),dairy,24.9,kg,2026-10-08,2026-10-18,Cold Room A (4°C),critical,Batch generated for biz_002. Shelf life: 10d. Storage: Cold Room A (4°C).
+Paneer (biz_002),dairy,9.75,kg,2026-10-16,2026-10-26,Cold Room A (4°C),high,Batch generated for biz_002. Shelf life: 10d. Storage: Cold Room A (4°C).
+Sourdough Loaf (biz_002),bakery,12.68,kg,2026-10-23,2026-10-26,Bakery Rack 1,high,Batch generated for biz_002. Shelf life: 3d. Storage: Bakery Rack 1.
+Butter Croissant (biz_002),bakery,23.26,kg,2026-10-23,2026-10-26,Bakery Rack 1,high,Batch generated for biz_002. Shelf life: 3d. Storage: Bakery Rack 1.
+Whole Wheat Bread (biz_002),bakery,18.05,kg,2026-10-23,2026-10-26,Bakery Rack 1,high,Batch generated for biz_002. Shelf life: 3d. Storage: Bakery Rack 1.
+Baguette (biz_002),bakery,20.23,kg,2026-10-23,2026-10-26,Bakery Rack 1,high,Batch generated for biz_002. Shelf life: 3d. Storage: Bakery Rack 1.
+Muffins 4-pk (biz_002),bakery,41.83,kg,2026-10-16,2026-10-19,Bakery Rack 1,critical,Batch generated for biz_002. Shelf life: 3d. Storage: Bakery Rack 1.
+Tomatoes (biz_002),produce,22.36,kg,2026-10-17,2026-10-23,Produce Cooler B,high,Batch generated for biz_002. Shelf life: 7d. Storage: Produce Cooler B.
+Bananas (biz_002),produce,44.01,kg,2026-10-17,2026-10-28,Produce Cooler B,medium,Batch generated for biz_002. Shelf life: 7d. Storage: Produce Cooler B.
+Spinach Bunch (biz_002),produce,22.67,kg,2026-10-19,2026-10-26,Produce Cooler B,high,Batch generated for biz_002. Shelf life: 7d. Storage: Produce Cooler B.
+Bell Peppers (biz_002),produce,52.92,kg,2026-10-14,2026-10-21,Produce Cooler B,critical,Batch generated for biz_002. Shelf life: 7d. Storage: Produce Cooler B.
+Apples Gala (biz_002),produce,19.31,kg,2026-10-19,2026-10-26,Produce Cooler B,high,Batch generated for biz_002. Shelf life: 7d. Storage: Produce Cooler B.
+Chicken Breast (biz_002),meat,7.91,kg,2026-10-20,2026-10-25,Deep Freezer / Chiller (-2°C),high,Batch generated for biz_002. Shelf life: 5d. Storage: Deep Freezer / Chiller (-2°C).
+Minced Beef (biz_002),meat,19.31,kg,2026-10-16,2026-10-26,Deep Freezer / Chiller (-2°C),high,Batch generated for biz_002. Shelf life: 5d. Storage: Deep Freezer / Chiller (-2°C).
+Pork Chops (biz_002),meat,17.37,kg,2026-10-21,2026-10-26,Deep Freezer / Chiller (-2°C),high,Batch generated for biz_002. Shelf life: 5d. Storage: Deep Freezer / Chiller (-2°C).
+Salmon Fillet (biz_002),meat,17.85,kg,2026-10-21,2026-10-26,Deep Freezer / Chiller (-2°C),high,Batch generated for biz_002. Shelf life: 5d. Storage: Deep Freezer / Chiller (-2°C).
+Lamb Stew Cut (biz_002),meat,12.93,kg,2026-10-16,2026-10-21,Deep Freezer / Chiller (-2°C),critical,Batch generated for biz_002. Shelf life: 5d. Storage: Deep Freezer / Chiller (-2°C).
+Pasta Penne 500g (biz_002),packaged,15.9,units,2026-04-21,2026-10-18,Dry Storage Shelf C,critical,Batch generated for biz_002. Shelf life: 180d. Storage: Dry Storage Shelf C.
+Canned Tomatoes (biz_002),packaged,9.1,units,2026-04-26,2026-10-23,Dry Storage Shelf C,high,Batch generated for biz_002. Shelf life: 180d. Storage: Dry Storage Shelf C.
+Basmati Rice 1kg (biz_002),packaged,33.75,units,2026-07-31,2027-01-27,Dry Storage Shelf C,low,Batch generated for biz_002. Shelf life: 180d. Storage: Dry Storage Shelf C.
+Olive Oil 500ml (biz_002),packaged,16.41,units,2026-05-19,2026-11-15,Dry Storage Shelf C,medium,Batch generated for biz_002. Shelf life: 180d. Storage: Dry Storage Shelf C.
+Cereal Flakes (biz_002),packaged,34.76,units,2026-06-02,2026-11-29,Dry Storage Shelf C,low,Batch generated for biz_002. Shelf life: 180d. Storage: Dry Storage Shelf C.
+Orange Juice 1L (biz_002),beverages,23.59,litres,2026-07-29,2026-10-27,Beverage Display Aisle,medium,Batch generated for biz_002. Shelf life: 90d. Storage: Beverage Display Aisle.
+Sparkling Water 6-pk (biz_002),beverages,16.58,litres,2026-07-21,2026-10-19,Beverage Display Aisle,critical,Batch generated for biz_002. Shelf life: 90d. Storage: Beverage Display Aisle.
+Cold Brew Coffee (biz_002),beverages,16.16,litres,2026-10-16,2026-12-31,Beverage Display Aisle,low,Batch generated for biz_002. Shelf life: 90d. Storage: Beverage Display Aisle.
+Green Tea 500ml (biz_002),beverages,12.76,litres,2026-07-26,2026-10-24,Beverage Display Aisle,high,Batch generated for biz_002. Shelf life: 90d. Storage: Beverage Display Aisle.
+Lemonade (biz_002),beverages,5.32,litres,2026-09-12,2026-12-11,Beverage Display Aisle,low,Batch generated for biz_002. Shelf life: 90d. Storage: Beverage Display Aisle.
+Whole Milk 1L (biz_003),dairy,9.19,kg,2026-10-16,2026-10-28,Cold Room A (4°C),medium,Batch generated for biz_003. Shelf life: 10d. Storage: Cold Room A (4°C).
+Greek Yogurt (biz_003),dairy,8.33,kg,2026-10-16,2026-10-26,Cold Room A (4°C),high,Batch generated for biz_003. Shelf life: 10d. Storage: Cold Room A (4°C).
+Cheddar Cheese (biz_003),dairy,12.99,kg,2026-10-16,2026-10-26,Cold Room A (4°C),high,Batch generated for biz_003. Shelf life: 10d. Storage: Cold Room A (4°C).
+Butter 250g (biz_003),dairy,25.03,kg,2026-10-16,2026-10-26,Cold Room A (4°C),high,Batch generated for biz_003. Shelf life: 10d. Storage: Cold Room A (4°C).
+Paneer (biz_003),dairy,30.13,kg,2026-10-17,2026-11-02,Cold Room A (4°C),medium,Batch generated for biz_003. Shelf life: 10d. Storage: Cold Room A (4°C).
+Sourdough Loaf (biz_003),bakery,8.55,kg,2026-10-19,2026-10-22,Bakery Rack 1,critical,Batch generated for biz_003. Shelf life: 3d. Storage: Bakery Rack 1.
+Butter Croissant (biz_003),bakery,20.55,kg,2026-10-23,2026-10-26,Bakery Rack 1,high,Batch generated for biz_003. Shelf life: 3d. Storage: Bakery Rack 1.
+Whole Wheat Bread (biz_003),bakery,18.62,kg,2026-10-19,2026-10-23,Bakery Rack 1,high,Batch generated for biz_003. Shelf life: 3d. Storage: Bakery Rack 1.
+Baguette (biz_003),bakery,25.74,kg,2026-10-17,2026-10-24,Bakery Rack 1,high,Batch generated for biz_003. Shelf life: 3d. Storage: Bakery Rack 1.
+Muffins 4-pk (biz_003),bakery,13.13,kg,2026-10-20,2026-10-23,Bakery Rack 1,high,Batch generated for biz_003. Shelf life: 3d. Storage: Bakery Rack 1.
+Tomatoes (biz_003),produce,30.48,kg,2026-10-14,2026-10-21,Produce Cooler B,critical,Batch generated for biz_003. Shelf life: 7d. Storage: Produce Cooler B.
+Bananas (biz_003),produce,45.53,kg,2026-10-19,2026-10-24,Produce Cooler B,high,Batch generated for biz_003. Shelf life: 7d. Storage: Produce Cooler B.
+Spinach Bunch (biz_003),produce,34.51,kg,2026-10-19,2026-10-24,Produce Cooler B,high,Batch generated for biz_003. Shelf life: 7d. Storage: Produce Cooler B.
+Bell Peppers (biz_003),produce,41.36,kg,2026-10-15,2026-10-22,Produce Cooler B,critical,Batch generated for biz_003. Shelf life: 7d. Storage: Produce Cooler B.
+Apples Gala (biz_003),produce,14.13,kg,2026-10-19,2026-10-26,Produce Cooler B,high,Batch generated for biz_003. Shelf life: 7d. Storage: Produce Cooler B.
+Chicken Breast (biz_003),meat,23.87,kg,2026-10-17,2026-10-27,Deep Freezer / Chiller (-2°C),medium,Batch generated for biz_003. Shelf life: 5d. Storage: Deep Freezer / Chiller (-2°C).
+Minced Beef (biz_003),meat,6.78,kg,2026-10-18,2026-10-23,Deep Freezer / Chiller (-2°C),high,Batch generated for biz_003. Shelf life: 5d. Storage: Deep Freezer / Chiller (-2°C).
+Pork Chops (biz_003),meat,7.96,kg,2026-10-16,2026-10-28,Deep Freezer / Chiller (-2°C),medium,Batch generated for biz_003. Shelf life: 5d. Storage: Deep Freezer / Chiller (-2°C).
+Salmon Fillet (biz_003),meat,22.57,kg,2026-10-21,2026-10-26,Deep Freezer / Chiller (-2°C),high,Batch generated for biz_003. Shelf life: 5d. Storage: Deep Freezer / Chiller (-2°C).
+Lamb Stew Cut (biz_003),meat,20.53,kg,2026-10-18,2026-10-23,Deep Freezer / Chiller (-2°C),high,Batch generated for biz_003. Shelf life: 5d. Storage: Deep Freezer / Chiller (-2°C).
+Pasta Penne 500g (biz_003),packaged,10.32,units,2026-10-17,2027-02-27,Dry Storage Shelf C,low,Batch generated for biz_003. Shelf life: 180d. Storage: Dry Storage Shelf C.
+Canned Tomatoes (biz_003),packaged,12.89,units,2026-04-23,2026-10-20,Dry Storage Shelf C,critical,Batch generated for biz_003. Shelf life: 180d. Storage: Dry Storage Shelf C.
+Basmati Rice 1kg (biz_003),packaged,9.65,units,2026-04-25,2026-10-22,Dry Storage Shelf C,critical,Batch generated for biz_003. Shelf life: 180d. Storage: Dry Storage Shelf C.
+Olive Oil 500ml (biz_003),packaged,26.83,units,2026-07-17,2027-01-13,Dry Storage Shelf C,low,Batch generated for biz_003. Shelf life: 180d. Storage: Dry Storage Shelf C.
+Cereal Flakes (biz_003),packaged,30.12,units,2026-06-17,2026-12-14,Dry Storage Shelf C,low,Batch generated for biz_003. Shelf life: 180d. Storage: Dry Storage Shelf C.
+Orange Juice 1L (biz_003),beverages,7.95,litres,2026-10-16,2026-12-20,Beverage Display Aisle,low,Batch generated for biz_003. Shelf life: 90d. Storage: Beverage Display Aisle.
+Sparkling Water 6-pk (biz_003),beverages,27.06,litres,2026-07-26,2026-10-24,Beverage Display Aisle,high,Batch generated for biz_003. Shelf life: 90d. Storage: Beverage Display Aisle.
+Cold Brew Coffee (biz_003),beverages,16.53,litres,2026-09-19,2026-12-18,Beverage Display Aisle,low,Batch generated for biz_003. Shelf life: 90d. Storage: Beverage Display Aisle.
+Green Tea 500ml (biz_003),beverages,27.73,litres,2026-08-13,2026-11-11,Beverage Display Aisle,medium,Batch generated for biz_003. Shelf life: 90d. Storage: Beverage Display Aisle.
+Lemonade (biz_003),beverages,5.4,litres,2026-07-27,2026-10-25,Beverage Display Aisle,high,Batch generated for biz_003. Shelf life: 90d. Storage: Beverage Display Aisle.
