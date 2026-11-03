@@ -1,6 +1,6 @@
 # AI-Powered Food Waste Prediction & Inventory Optimization Service
 
-A production-ready microservice built with **FastAPI**, **PyTorch**, and **Meta Prophet** for the Infosys Springboard Project:
+A production-grade microservice built with **FastAPI**, **PyTorch**, and **Meta Prophet** for the Infosys Springboard Project:
 > *"AI-Powered Food Waste Management Platform for Surplus Identification and Redistribution Optimization"*
 
 ---
@@ -13,6 +13,7 @@ A production-ready microservice built with **FastAPI**, **PyTorch**, and **Meta 
 - **Smart Replenishment Recommendations**: Order optimization adhering to lead-time demand, statistical safety stock, perishable shelf-life bounds, and storage capacity limits.
 - **Scheduled Batch Intelligence**: Built-in APScheduler daily job for scheduled tenant-wide inventory risk audits.
 - **Security & Integrity**: API-Key header authentication (`X-API-Key`) and configurable CORS.
+- **Resilient Fallback Mode**: Standard-library HTTP client in Django (`MLServiceClient`) with automatic fallback to Milestone 1 heuristic rules when the microservice is offline.
 
 ---
 
@@ -22,7 +23,7 @@ A production-ready microservice built with **FastAPI**, **PyTorch**, and **Meta 
 ml-service/
 ├── .env                  # Local environment configuration
 ├── .env.example          # Sample environment variables
-├── requirements.txt      # Python dependencies
+├── requirements.txt      # Python dependencies (fastapi, torch, prophet, apscheduler, etc.)
 ├── Dockerfile            # Container deployment image
 ├── README.md             # Run instructions and API docs
 ├── MILESTONE2_REPORT.md  # Comprehensive project milestone report
@@ -38,7 +39,7 @@ ml-service/
 │   └── inventory_snapshot.csv
 ├── models/
 │   ├── baseline_prophet.py # Meta Prophet baseline model
-│   ├── lstm_model.py       # PyTorch recurrent neural network
+│   ├── lstm_model.py       # PyTorch recurrent neural network (weights_only=False for PyTorch 2.6+)
 │   ├── train_and_eval.py   # Training, metrics evaluation & plotting
 │   ├── metrics.json        # Evaluation metrics comparison store
 │   └── saved/              # Serialized weights (.joblib, .pt)
@@ -48,7 +49,7 @@ ml-service/
 │   └── risk_scorer.py    # 0-100 waste risk scoring engine
 ├── reorder/
 │   └── optimizer.py      # Replenishment optimizer & reasoning generator
-└── tests/                # Automated pytest suite
+└── tests/                # Automated pytest suite (31 tests passing)
 ```
 
 ---
@@ -56,22 +57,21 @@ ml-service/
 ## 3. Local Setup & Execution
 
 ### Prerequisites
-- Python 3.10+ (Tested up to Python 3.14)
-- Virtual environment
+- Python 3.10 to 3.13
+- Core dependencies: `fastapi`, `uvicorn`, `torch>=2.2.0`, `prophet>=1.1.5`, `apscheduler>=3.10.0`, `pandas`, `scikit-learn`
 
 ### Installation
 ```bash
 # Navigate to ml-service
 cd ml-service
 
-# Create virtual environment if needed
-python -m venv .venv
-source .venv/bin/activate       # On Linux/macOS
-.\.venv\Scripts\activate        # On Windows
-
 # Install dependencies
 pip install -r requirements.txt
 ```
+
+> **Note on Windows Dependencies**:
+> - `prophet` uses `cmdstanpy`. A prebuilt binary wheel (`prophet-1.5.0`) is installed in the Python environment.
+> - `torch.load` in PyTorch 2.6+ defaults to `weights_only=True`. The `LSTMForecaster.load()` method explicitly passes `weights_only=False` to safely load the serialised `MinMaxScaler` object.
 
 ### Run Step-by-Step
 
@@ -103,7 +103,7 @@ X-API-Key: dev-secret-key-food-waste-2026
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
 | `GET` | `/health` | Service liveness & loaded models check (Public) |
-| `POST` | `/predict/demand` | Returns future demand forecast per category |
+| `POST` | `/predict/demand` | Returns future demand forecast per category (Prophet or PyTorch LSTM) |
 | `POST` | `/risk/score` | Real-time 0–100 waste risk score for an inventory batch |
 | `GET` | `/risk/batch/{business_id}` | Batch risk evaluation of active inventory |
 | `POST` | `/reorder/recommend` | Optimal purchase quantity with transparent reasoning |
@@ -111,7 +111,44 @@ X-API-Key: dev-secret-key-food-waste-2026
 
 ---
 
-## 5. Running with Docker
+## 5. Django Platform Integration & Resilient Fallback
+
+The Django application connects to this microservice via `food_management/ml_client.py`:
+- **Zero Extra Dependencies**: Uses Python's standard-library `urllib.request` without adding external HTTP packages.
+- **Fail-Safe Operation**: If the FastAPI service is offline or unreachable, `ml_client` automatically activates fallback heuristic algorithms:
+  - Waste risk scoring defaults to local decay velocity rules.
+  - Replenishment recommendations default to baseline min-stock thresholds.
+  - Forecast visualizations render a baseline corridor with a "Fallback Heuristics Active" badge on the UI.
+- **Live Integration**: When the microservice is running on port 8001, the Django dashboard switches to "Live ML Service (PROPHET/LSTM)" and displays 7-day predicted demand bounds and live inventory surplus risk.
+
+---
+
+## 6. Testing
+
+### Run Microservice Test Suite
+```bash
+cd ml-service
+python -m pytest tests/ -v
+# Output: 31 passed in ~11s
+```
+
+### Run Tabular Waste-Level Classifier Evaluation
+```bash
+python ml_service/train_model.py
+# Output:
+# Test Accuracy: 87.31%
+# Macro Precision: 84.78% | Macro Recall: 83.34% | Macro F1: 83.91%
+```
+
+### Run Full Django Integration Test Suite
+```bash
+python manage.py test -v 2
+# Output: 10 passed in ~19s (including ML client mocking and fallback verification)
+```
+
+---
+
+## 7. Running with Docker
 
 ```bash
 # Build the Docker image

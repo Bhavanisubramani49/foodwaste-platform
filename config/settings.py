@@ -23,7 +23,11 @@ SECRET_KEY = os.getenv('SECRET_KEY') or 'django-insecure-dev-temporary-secret-ke
 # Reads DEBUG from .env (defaults to True for development)
 DEBUG = os.getenv('DEBUG', 'True').strip().lower() in ('true', '1', 't', 'yes')
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '[::1]', 'testserver']
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost,[::1],testserver').split(',')
+    if host.strip()
+]
 
 
 # Application definition
@@ -73,18 +77,21 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
-# If Supabase DB credentials (including password) are provided, use PostgreSQL; otherwise fallback to SQLite
-if os.getenv('DB_HOST') and os.getenv('DB_PASSWORD'):
+# If PostgreSQL credentials are provided, use PostgreSQL; otherwise fallback to local SQLite
+DB_HOST = os.getenv('DB_HOST', '').strip()
+DB_NAME = os.getenv('DB_NAME', '').strip()
+
+if DB_HOST or DB_NAME:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.getenv('DB_NAME', 'postgres'),
+            'NAME': DB_NAME or 'foodwaste_db',
             'USER': os.getenv('DB_USER', 'postgres'),
             'PASSWORD': os.getenv('DB_PASSWORD', ''),
-            'HOST': os.getenv('DB_HOST', ''),
+            'HOST': DB_HOST or 'localhost',
             'PORT': os.getenv('DB_PORT', '5432'),
             'OPTIONS': {
-                'sslmode': 'require',
+                'sslmode': os.getenv('DB_SSLMODE', 'prefer').strip(),
             },
         }
     }

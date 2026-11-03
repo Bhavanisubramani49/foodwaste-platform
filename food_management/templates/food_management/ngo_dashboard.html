@@ -1,0 +1,270 @@
+{% extends 'food_management/base.html' %}
+
+{% block title %}NGO Command Center · FoodRescue{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="expiry-chip expiry-chip--safe">
+                <i class="bi bi-shield-check"></i> VERIFIED RELIEF ORGANIZATION
+            </span>
+            <span class="text-muted small">· Dedicated NGO Operations Dashboard</span>
+        </div>
+        <h2 class="h3 fw-bold mb-0">NGO Redistribution Command Center</h2>
+    </div>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary btn-sm px-3" href="{% url 'ngo_requirement_create' %}">
+            <i class="bi bi-plus-circle me-1"></i> Post Food Requirement
+        </a>
+        <a class="btn btn-brand-urgent btn-sm px-3.5 shadow-sm" href="{% url 'surplus_list' %}">
+            <i class="bi bi-lightning-charge-fill me-1"></i> Browse Live Marketplace
+        </a>
+    </div>
+</div>
+
+<!-- ==========================================
+     HERO STATS ROW (NGO Specific)
+     ========================================== -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="hero-metric-card h-100" style="border-left: 3px solid #D9381E;">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <div class="metric-label" style="color: #D9381E;">Active Pickups</div>
+                <span class="pulse-indicator pulse-indicator--urgent"></span>
+            </div>
+            <div class="metric-val text-danger">
+                {{ active_pickups.count|default:"0" }}<span class="fs-6 fw-normal text-muted ms-1">dispatches</span>
+            </div>
+            <div class="small text-danger mt-2 fw-medium">
+                <i class="bi bi-clock-history me-1"></i> Scheduled / in-transit
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-lg-3">
+        <div class="hero-metric-card h-100" style="border-left: 3px solid var(--primary-green);">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <div class="metric-label">Food Rescued</div>
+                <i class="bi bi-box2-heart text-success"></i>
+            </div>
+            <div class="metric-val text-success">
+                {{ total_received_kg|default:"0" }}<span class="fs-6 fw-normal text-muted ms-1">kg</span>
+            </div>
+            <div class="small text-muted mt-2 d-flex align-items-center gap-1">
+                <span class="badge bg-success-subtle text-success px-1.5 py-0.5" style="font-size: 0.72rem;">{{ completed_pickups.count }} lots</span>
+                <span>received</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-lg-3">
+        <div class="hero-metric-card h-100" style="border-left: 3px solid #D97706;">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <div class="metric-label">Meals Served</div>
+                <i class="bi bi-people-fill text-warning"></i>
+            </div>
+            <div class="metric-val text-dark">
+                {{ meals_served|default:"0" }}<span class="fs-6 fw-normal text-muted ms-1">meals</span>
+            </div>
+            <div class="small text-muted mt-2 d-flex align-items-center gap-1">
+                <i class="bi bi-heart text-danger"></i>
+                <span>Distributed to community</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6 col-lg-3">
+        <div class="hero-metric-card h-100" style="border-left: 3px solid #0284C7;">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <div class="metric-label">Impact Points</div>
+                <i class="bi bi-award text-primary"></i>
+            </div>
+            <div class="metric-val text-primary">
+                {{ gamification.points|default:"0" }}<span class="fs-6 fw-normal text-muted ms-1">pts</span>
+            </div>
+            <div class="small text-muted mt-2 d-flex align-items-center gap-1">
+                <span class="badge bg-info-subtle text-primary px-1.5 py-0.5" style="font-size: 0.72rem;">Level {{ gamification.level }}</span>
+                <span>{{ gamification.streak_days }}d streak</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==========================================
+     SMART MATCH FEED (Surplus matched to NGO requirements)
+     ========================================== -->
+<div class="card p-4 mb-4" style="border-radius: var(--radius-lg); border-top: 4px solid var(--primary-green);">
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-0.5 rounded-1 small fw-bold">
+                    <i class="bi bi-lightning-charge-fill me-1"></i> SMART MATCH ENGINE
+                </span>
+                <span class="text-muted small">Auto-matched using your registered food requirements</span>
+            </div>
+            <h5 class="fw-bold mb-0" style="font-size: 1.1rem;">Top Surplus Allocations for Your Kitchen</h5>
+        </div>
+        <a href="{% url 'surplus_list' %}" class="btn btn-outline-secondary btn-sm px-3" style="border-radius: var(--radius-sm);">
+            Browse All Lots &rarr;
+        </a>
+    </div>
+
+    {% if smart_matches %}
+        <div class="row g-3">
+            {% for match in smart_matches %}
+            <div class="col-md-6 col-xl-4">
+                <div class="lot-card h-100 p-3 bg-white rounded border d-flex flex-column justify-content-between shadow-sm">
+                    <div>
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="badge bg-light text-secondary border px-2 py-0.5" style="font-size: 0.72rem;">{{ match.listing.category }}</span>
+                            <span class="badge {% if match.score >= 80 %}bg-success text-white{% elif match.score >= 60 %}bg-warning text-dark{% else %}bg-secondary text-white{% endif %} px-2 py-0.5 font-monospace" style="font-size: 0.72rem;">
+                                {{ match.score }}% Match ({{ match.tier }})
+                            </span>
+                        </div>
+                        <h6 class="fw-bold text-dark mb-1">{{ match.listing.food_name }}</h6>
+                        <div class="d-flex justify-content-between text-muted small mb-2">
+                            <span>Available: <strong class="text-success">{{ match.available_qty }} {{ match.listing.unit }}</strong></span>
+                            <span>Expires: <strong class="text-dark">{{ match.listing.expiry_date }}</strong></span>
+                        </div>
+                        <div class="p-2 rounded mb-2" style="background: var(--bg-cream); font-size: 0.78rem;">
+                            <i class="bi bi-geo-alt text-danger me-1"></i>{{ match.listing.pickup_location|truncatechars:45 }}
+                        </div>
+                        {% if match.reasons %}
+                            <ul class="list-unstyled small text-muted mb-3" style="font-size: 0.75rem;">
+                                {% for reason in match.reasons|slice:":2" %}
+                                    <li><i class="bi bi-check2 text-success me-1"></i>{{ reason }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                    <div class="d-grid mt-2">
+                        <a href="{% url 'donation_request_create' %}?listing={{ match.listing.pk }}" class="btn btn-brand-urgent btn-sm py-1.5">
+                            <i class="bi bi-lightning-charge me-1"></i> 1-Click Request Claim
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="p-4 rounded text-center" style="background: var(--bg-cream); border: 1px dashed var(--border-warm);">
+            <i class="bi bi-info-circle text-muted fs-4 d-block mb-2"></i>
+            <h6 class="fw-bold mb-1">No automatic matches right now</h6>
+            <p class="text-muted small mb-3">Register your kitchen's daily food requirements to enable real-time smart matching when restaurants post surplus.</p>
+            <a href="{% url 'ngo_requirement_create' %}" class="btn btn-brand-primary btn-sm px-3.5">
+                <i class="bi bi-plus-circle me-1"></i> Register Food Requirement
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+<!-- ==========================================
+     ACTIVE DISPATCHES & PICKUP PINs
+     ========================================== -->
+<div class="row g-4 mb-4">
+    <!-- Active Pickups Card -->
+    <div class="col-lg-8">
+        <div class="card p-4 h-100 card-sm-radius">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="fw-bold mb-0" style="font-size: 1.05rem;">Active Pickup Dispatches</h5>
+                    <p class="text-muted small mb-0">Present collection PIN upon arrival at the donor's premises</p>
+                </div>
+                <span class="badge bg-warning-subtle text-dark small">{{ active_pickups.count }} In Pipeline</span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-compact-food align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Batch Item</th>
+                            <th>Quantity</th>
+                            <th>Scheduled Date</th>
+                            <th>Pickup PIN</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for req in active_pickups %}
+                        <tr>
+                            <td>
+                                <strong class="text-dark d-block">{{ req.listing.food_name }}</strong>
+                                <span class="text-muted small"><i class="bi bi-geo-alt me-1"></i>{{ req.listing.pickup_location|truncatechars:35 }}</span>
+                            </td>
+                            <td>
+                                <strong class="text-success font-monospace">{{ req.requested_quantity }}</strong>
+                                <span class="text-muted small">{{ req.listing.unit }}</span>
+                            </td>
+                            <td>
+                                <span class="small font-monospace">{{ req.pickup_date }}</span>
+                                <span class="d-block text-muted" style="font-size: 0.72rem;">{{ req.pickup_time_slot }}</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-dark text-warning font-monospace px-2.5 py-1" style="font-size: 0.85rem; letter-spacing: 0.05em;">
+                                    <i class="bi bi-key-fill me-1 text-warning"></i>{{ req.pickup_code|default:"RC-READY" }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge {% if req.status == 'approved' %}bg-info-subtle text-primary border border-info-subtle{% elif req.status == 'scheduled' %}bg-success-subtle text-success border border-success-subtle{% else %}bg-warning-subtle text-dark border border-warning-subtle{% endif %} px-2 py-1">
+                                    {{ req.status|title }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="py-4 text-center text-muted small">
+                                No active pickups scheduled at this moment.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- My Registered Food Requirements -->
+    <div class="col-lg-4">
+        <div class="card p-4 h-100 card-sm-radius">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h5 class="fw-bold mb-0" style="font-size: 1.05rem;">My Food Needs</h5>
+                <a href="{% url 'ngo_requirement_create' %}" class="btn btn-outline-secondary btn-sm py-0.5 px-2" style="font-size: 0.75rem;">+ Add</a>
+            </div>
+            <p class="text-muted small mb-3">Community capacity needs registered by your kitchen</p>
+
+            {% if my_requirements %}
+                <div class="d-flex flex-column gap-2.5" style="max-height: 280px; overflow-y: auto;">
+                    {% for req in my_requirements %}
+                    <div class="p-2.5 rounded border bg-white small">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <strong class="text-dark">{{ req.category }}</strong>
+                            <span class="badge {% if req.urgency == 'urgent' %}bg-danger text-white{% elif req.urgency == 'medium' %}bg-warning text-dark{% else %}bg-secondary text-white{% endif %} py-0.5 px-1.5" style="font-size: 0.7rem;">
+                                {{ req.get_urgency_display }}
+                            </span>
+                        </div>
+                        <div class="text-muted d-flex justify-content-between">
+                            <span>Needed: <strong>{{ req.quantity_needed }} {{ req.unit }}</strong></span>
+                            <span class="text-success font-monospace">{{ req.status|title }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state-warm py-4 text-center">
+                    <p class="text-muted small mb-2">No food requirements registered yet.</p>
+                    <a href="{% url 'ngo_requirement_create' %}" class="btn btn-sm btn-brand-primary">Register Needs</a>
+                </div>
+            {% endif %}
+
+            <div class="mt-auto pt-3 border-top">
+                <a href="{% url 'ngo_requirements_list' %}" class="small text-success text-decoration-none fw-medium d-flex justify-content-between align-items-center">
+                    <span>Manage all requirements</span>
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

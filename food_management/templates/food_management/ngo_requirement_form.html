@@ -1,0 +1,87 @@
+{% extends 'food_management/base.html' %}
+
+{% block title %}Register Community Food Need · FoodRescue{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center gap-2 mb-3">
+            <a href="{% url 'ngo_requirements_list' %}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left me-1"></i> Back
+            </a>
+            <h2 class="h4 fw-bold mb-0">Register NGO Food Requirement</h2>
+        </div>
+
+        <div class="card p-4 shadow-sm" style="border-radius: var(--radius-lg);">
+            <p class="text-muted small mb-4">
+                Specify what food categories and quantities your kitchen or community center requires. Our smart matching algorithm will immediately notify you when restaurants and supermarkets list matching surplus.
+            </p>
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger py-2 small">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold">Food Category *</label>
+                        {{ form.category }}
+                        {% if form.category.errors %}
+                            <div class="text-danger small">{{ form.category.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label small fw-semibold">Quantity Needed *</label>
+                        {{ form.quantity_needed }}
+                        {% if form.quantity_needed.errors %}
+                            <div class="text-danger small">{{ form.quantity_needed.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label small fw-semibold">Unit *</label>
+                        {{ form.unit }}
+                        {% if form.unit.errors %}
+                            <div class="text-danger small">{{ form.unit.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold">Urgency Level *</label>
+                        {{ form.urgency }}
+                        {% if form.urgency.errors %}
+                            <div class="text-danger small">{{ form.urgency.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold">Preferred Delivery / Pickup Location</label>
+                        {{ form.location }}
+                        {% if form.location.errors %}
+                            <div class="text-danger small">{{ form.location.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label small fw-semibold">Operational Notes & Storage Constraints</label>
+                        {{ form.notes }}
+                        {% if form.notes.errors %}
+                            <div class="text-danger small">{{ form.notes.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                    <a href="{% url 'ngo_requirements_list' %}" class="btn btn-outline-secondary btn-sm px-3">Cancel</a>
+                    <button type="submit" class="btn btn-brand-primary btn-sm px-4">Register Requirement</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

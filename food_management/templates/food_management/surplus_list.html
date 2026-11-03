@@ -96,18 +96,26 @@
                         <span><strong>2 NGOs nearby</strong> ready to receive</span>
                     </div>
 
-                    {% if listing.status == 'available' %}
-                        <div class="d-flex gap-2">
-                            <button type="button" class="btn btn-brand-urgent btn-sm px-3 py-1.5 claim-btn" onclick="openClaimSuccessModal('{{ listing.food_name }}', '{{ listing.quantity }} {{ listing.unit }}', '{{ listing.pickup_location }}')">
+                    <div class="d-flex gap-2 align-items-center">
+                        {% if listing.status == 'available' %}
+                            <a href="{% url 'donation_request_create' %}?listing={{ listing.pk }}" class="btn btn-brand-urgent btn-sm px-3 py-1.5 shadow-sm d-inline-flex align-items-center">
                                 <i class="bi bi-lightning-charge-fill me-1"></i> Claim Lot
-                            </button>
-                            <a href="{% url 'donation_request_create' %}?listing={{ listing.pk }}" class="btn btn-outline-secondary btn-sm px-2.5 py-1.5" title="Formal NGO Allocation Form" style="border-radius: var(--radius-sm);">
-                                <i class="bi bi-file-earmark-text"></i>
                             </a>
-                        </div>
-                    {% else %}
-                        <span class="badge bg-light text-muted border px-3 py-1.5">Already Allocated</span>
-                    {% endif %}
+                        {% else %}
+                            <span class="badge bg-light text-muted border px-3 py-1.5">{{ listing.status|title }}</span>
+                        {% endif %}
+
+                        {% if request.user.is_superuser or listing.business == request.user %}
+                            {% if listing.status != 'cancelled' and listing.status != 'collected' %}
+                                <form method="post" action="{% url 'surplus_cancel' listing.pk %}" onsubmit="return confirm('Are you sure you want to cancel this surplus lot?');" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm py-1 px-2.5" title="Cancel this surplus listing">
+                                        <i class="bi bi-x-circle me-1"></i> Cancel Lot
+                                    </button>
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             {% empty %}

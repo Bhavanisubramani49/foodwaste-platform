@@ -1,7 +1,5 @@
-
 import pandas as pd
 import joblib
-
 from pathlib import Path
 from sklearn.model_selection import train_test_split
 from sklearn.compose import ColumnTransformer
@@ -9,13 +7,16 @@ from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.metrics import accuracy_score, classification_report, f1_score, precision_score, recall_score
 
-# Load cleaned dataset
+# Load deduplicated dataset
 data_path = Path("data/processed/food_waste_cleaned.csv")
+if not data_path.exists():
+    data_path = Path("data/raw/food_waste_dataset.csv")
+
 df = pd.read_csv(data_path)
 
-# Predict Waste_Level using features available before waste occurs.
+# Target: Waste_Level ('Low', 'Medium', 'High')
 target = "Waste_Level"
 
 features = [
@@ -31,6 +32,22 @@ features = [
     "Weather",
 ]
 
+categorical_features = [
+    "Business_Type",
+    "Food_Category",
+    "Promotion",
+    "Weather",
+]
+
+numerical_features = [
+    "Purchase_Quantity",
+    "Units_Sold",
+    "Remaining_Stock",
+    "Shelf_Life_Days",
+    "Storage_Temperature",
+    "Daily_Demand",
+]
+
 X = df[features].copy()
 y = df[target].copy()
 
@@ -38,16 +55,8 @@ y = df[target].copy()
 label_encoder = LabelEncoder()
 y_encoded = label_encoder.fit_transform(y)
 
-# Identify column types
-categorical_features = X.select_dtypes(
-    include=["object"]
-).columns.tolist()
-
-numerical_features = X.select_dtypes(
-    exclude=["object"]
-).columns.tolist()
-
-# Preprocess data
+# Preprocessing Pipeline:
+# Missing values are imputed STRICTLY on X_train inside ColumnTransformer during model.fit()
 preprocessor = ColumnTransformer(
     transformers=[
         (
@@ -68,7 +77,7 @@ preprocessor = ColumnTransformer(
     ]
 )
 
-# Build the model
+# Full Model Pipeline
 model = Pipeline([
     ("preprocessor", preprocessor),
     ("classifier", RandomForestClassifier(
@@ -78,7 +87,7 @@ model = Pipeline([
     )),
 ])
 
-# Split data for training and testing
+# Split data: 80% train, 20% test, stratified by target class, reproducible seed 42
 X_train, X_test, y_train, y_test = train_test_split(
     X,
     y_encoded,
@@ -87,15 +96,27 @@ X_train, X_test, y_train, y_test = train_test_split(
     stratify=y_encoded,
 )
 
-# Train
+# Fit pipeline on training partition only (zero leakage into test partition)
 model.fit(X_train, y_train)
 
-# Evaluate
+# Evaluate on held-out test partition
 predictions = model.predict(X_test)
 
-print("Model training completed!")
-print(f"Accuracy: {accuracy_score(y_test, predictions):.2%}")
-print("\nClassification Report:")
+accuracy = accuracy_score(y_test, predictions)
+macro_prec = precision_score(y_test, predictions, average="macro", zero_division=0)
+macro_rec = recall_score(y_test, predictions, average="macro", zero_division=0)
+macro_f1 = f1_score(y_test, predictions, average="macro", zero_division=0)
+
+print("=" * 60)
+print("FOOD WASTE LEVEL CLASSIFIER - TRAINING & EVALUATION REPORT")
+print("=" * 60)
+print(f"Dataset Size: {len(df)} records (Train: {len(X_train)}, Test: {len(X_test)})")
+print(f"Data Leakage Safeguard: Preprocessing fitted exclusively on X_train")
+print(f"Test Accuracy: {accuracy:.2%}")
+print(f"Macro Precision: {macro_prec:.2%}")
+print(f"Macro Recall:    {macro_rec:.2%}")
+print(f"Macro F1-Score:  {macro_f1:.2%}")
+print("\nPer-Class Breakdown:")
 print(classification_report(
     y_test,
     predictions,
@@ -103,14 +124,28 @@ print(classification_report(
     target_names=label_encoder.classes_,
     zero_division=0,
 ))
+print("=" * 60)
 
-# Save trained model
+# Save trained pipeline and metadata
 output_dir = Path("ml_service/models")
 output_dir.mkdir(parents=True, exist_ok=True)
 
+model_artifact_path = output_dir / "waste_level_model.joblib"
 joblib.dump(
-    {"model": model, "label_encoder": label_encoder, "features": features},
-    output_dir / "waste_level_model.joblib",
+    {
+        "model": model,
+        "label_encoder": label_encoder,
+        "features": features,
+        "categorical_features": categorical_features,
+        "numerical_features": numerical_features,
+        "metrics": {
+            "accuracy": float(accuracy),
+            "macro_precision": float(macro_prec),
+            "macro_recall": float(macro_rec),
+            "macro_f1": float(macro_f1),
+        },
+    },
+    model_artifact_path,
 )
 
-print("\nModel saved to ml_service/models/waste_level_model.joblib")
+print(f"Model artifact saved safely to: {model_artifact_path}")

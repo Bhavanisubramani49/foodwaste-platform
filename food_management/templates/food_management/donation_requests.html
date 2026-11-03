@@ -1,6 +1,6 @@
 {% extends 'food_management/base.html' %}
 
-{% block title %}Donation Requests & NGO Handoff Pipeline{% endblock %}
+{% block title %}Donation Requests & NGO Handoff Pipeline · FoodRescue{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
@@ -13,9 +13,14 @@
         </div>
         <h2 class="h3 fw-bold mb-0">Donation Requests & Allocations</h2>
     </div>
-    <a class="btn btn-brand-primary btn-sm px-3.5 shadow-sm d-flex align-items-center gap-1" href="{% url 'donation_request_create' %}">
-        <i class="bi bi-plus-lg"></i> + Submit New Allocation Request
-    </a>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary btn-sm px-3" href="{% url 'surplus_list' %}">
+            <i class="bi bi-basket2 me-1"></i> Surplus Marketplace
+        </a>
+        <a class="btn btn-brand-primary btn-sm px-3.5 shadow-sm d-flex align-items-center gap-1" href="{% url 'donation_request_create' %}">
+            <i class="bi bi-plus-lg"></i> + Submit New Allocation Request
+        </a>
+    </div>
 </div>
 
 <!-- Authentic Microcopy Ribbon -->
@@ -38,6 +43,9 @@
             </a>
             <a href="{% url 'donation_requests' %}?status=requested" class="btn btn-sm {% if status_filter == 'requested' %}btn-warning text-dark{% else %}btn-outline-warning text-dark{% endif %}" style="border-radius: var(--radius-sm); font-size: 0.82rem;">
                 🟡 Requested
+            </a>
+            <a href="{% url 'donation_requests' %}?status=approved" class="btn btn-sm {% if status_filter == 'approved' %}btn-info text-dark{% else %}btn-outline-info text-dark{% endif %}" style="border-radius: var(--radius-sm); font-size: 0.82rem;">
+                🔵 Approved
             </a>
             <a href="{% url 'donation_requests' %}?status=scheduled" class="btn btn-sm {% if status_filter == 'scheduled' %}btn-success text-white{% else %}btn-outline-success{% endif %}" style="border-radius: var(--radius-sm); font-size: 0.82rem;">
                 🟢 Scheduled
@@ -63,6 +71,7 @@
                     <th>Recipient NGO</th>
                     <th>Requested Qty</th>
                     <th>Scheduled Pickup</th>
+                    <th>Pickup PIN</th>
                     <th>Status</th>
                     <th class="text-end pe-4">Update Status</th>
                 </tr>
@@ -83,28 +92,42 @@
                     </td>
                     <td>
                         <span class="small text-dark font-monospace"><i class="bi bi-calendar-event me-1 text-muted"></i>{{ request.pickup_date }}</span>
+                        {% if request.pickup_time_slot %}
+                            <span class="d-block text-muted" style="font-size: 0.72rem;">{{ request.pickup_time_slot }}</span>
+                        {% endif %}
                     </td>
                     <td>
-                        <span class="badge {% if request.status == 'collected' %}bg-success-subtle text-success border border-success-subtle{% elif request.status == 'scheduled' %}bg-warning-subtle text-dark border border-warning-subtle{% elif request.status == 'cancelled' %}bg-secondary-subtle text-secondary border{% else %}bg-danger-subtle text-danger border border-danger-subtle{% endif %} px-2 py-1">
+                        <span class="badge bg-dark text-warning font-monospace px-2 py-1" style="font-size: 0.8rem;">
+                            {{ request.pickup_code|default:"RC-READY" }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge {% if request.status == 'collected' %}bg-success-subtle text-success border border-success-subtle{% elif request.status == 'approved' %}bg-info-subtle text-primary border border-info-subtle{% elif request.status == 'scheduled' %}bg-warning-subtle text-dark border border-warning-subtle{% elif request.status == 'cancelled' %}bg-secondary-subtle text-secondary border{% else %}bg-danger-subtle text-danger border border-danger-subtle{% endif %} px-2 py-1">
                             {{ request.status|title }}
                         </span>
                     </td>
                     <td class="text-end pe-4">
-                        <form method="post" action="{% url 'donation_status_update' request.pk %}" class="d-inline-flex gap-1.5 align-items-center">
+                        {% if request.status != 'collected' and request.status != 'cancelled' %}
+                        <form method="post" action="{% url 'donation_status_update' request.pk %}" class="d-inline-flex gap-1.5 align-items-center justify-content-end">
                             {% csrf_token %}
                             <select name="status" class="form-select form-select-sm" style="width: auto; font-size: 0.82rem; border-radius: var(--radius-sm);">
                                 <option value="requested" {% if request.status == 'requested' %}selected{% endif %}>Requested</option>
+                                <option value="approved" {% if request.status == 'approved' %}selected{% endif %}>Approved</option>
                                 <option value="scheduled" {% if request.status == 'scheduled' %}selected{% endif %}>Scheduled</option>
-                                <option value="collected" {% if request.status == 'collected' %}selected{% endif %}>Collected</option>
-                                <option value="cancelled" {% if request.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                                <option value="collected">Collected</option>
+                                <option value="cancelled">Cancelled</option>
                             </select>
-                            <button class="btn btn-sm btn-brand-primary py-1 px-2.5" style="border-radius: var(--radius-sm);" type="submit">Update</button>
+                            <input type="text" name="verification_pin" placeholder="PIN (if collect)" class="form-control form-control-sm text-uppercase font-monospace" style="width: 110px; font-size: 0.78rem;" title="Enter driver's PIN if marking collected">
+                            <button class="btn btn-sm btn-brand-primary py-1 px-2.5 text-nowrap" style="border-radius: var(--radius-sm);" type="submit">Update</button>
                         </form>
+                        {% else %}
+                        <span class="text-muted small fst-italic">Closed</span>
+                        {% endif %}
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="6" class="p-0">
+                    <td colspan="7" class="p-0">
                         <div class="empty-state-warm py-5 text-center">
                             <h4 class="fw-bold">No donation requests pending</h4>
                             <p class="tagline mb-1">All surplus packages have been routed directly without delay.</p>

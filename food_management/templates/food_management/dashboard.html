@@ -112,7 +112,7 @@
             </div>
 
             <div class="headline-prediction my-2">
-                ~42 kg
+                ~{{ predicted_waste_kg|default:"0" }} kg
             </div>
             <h4 class="h5 fw-bold text-dark mb-2">May expire this week across inventory</h4>
             <p class="text-muted small mb-3">
@@ -125,7 +125,7 @@
                     <strong class="small text-dark">Suggested AI Mitigation:</strong>
                 </div>
                 <div class="small text-secondary">
-                    "Post 25 kg cooked rice & 14 kg paneer gravy to Surplus Marketplace now. 2 verified NGOs are within 2.5 km."
+                    "{{ ai_mitigation_text|default:prediction.recommended_action }}"
                 </div>
             </div>
 
@@ -147,7 +147,15 @@
                     <span class="text-muted" style="font-size: 0.78rem;">Projected waste risks (kg) vs real-time rescued volume with shaded 90% confidence corridor</span>
                 </div>
                 <div class="d-flex align-items-center gap-2">
-                    <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 0.72rem;">Oct 2026 Live Model</span>
+                    {% if is_live_model %}
+                    <span class="badge bg-success-subtle text-success border border-success px-2 py-1" style="font-size: 0.72rem;">
+                        <i class="bi bi-broadcast me-1"></i> Live ML Service ({{ model_used|upper }})
+                    </span>
+                    {% else %}
+                    <span class="badge bg-warning-subtle text-dark border border-warning px-2 py-1" style="font-size: 0.72rem;">
+                        <i class="bi bi-shield-check me-1"></i> Fallback Heuristics Active
+                    </span>
+                    {% endif %}
                 </div>
             </div>
             
@@ -156,6 +164,31 @@
             </div>
         </div>
     </div>
+    {% if reorder_recommendation %}
+    <div class="mt-4 pt-3 border-top">
+        <div class="row align-items-center g-3">
+            <div class="col-md-8">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-0.5 rounded-1 small fw-bold">
+                        <i class="bi bi-arrow-repeat me-1"></i> AI REORDER RECOMMENDATION
+                    </span>
+                    <span class="badge {% if reorder_recommendation.urgency == 'URGENT' %}bg-danger text-white{% elif reorder_recommendation.urgency == 'HOLD' %}bg-secondary text-white{% else %}bg-success text-white{% endif %} px-2 py-0.5" style="font-size: 0.72rem;">
+                        {{ reorder_recommendation.action }}
+                    </span>
+                </div>
+                <div class="small text-secondary">
+                    <strong class="text-dark">{{ dominant_category|capfirst }}:</strong> {{ reorder_recommendation.reasoning }}
+                </div>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <div class="d-inline-block p-2 px-3 rounded-2" style="background: var(--bg-cream); border: 1px solid var(--border-warm);">
+                    <span class="text-muted small d-block">Recommended Order</span>
+                    <strong class="fs-5 text-dark">{{ reorder_recommendation.recommended_order_qty }} {{ reorder_recommendation.unit|default:'kg' }}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 </div>
 
 <!-- ==========================================
@@ -350,14 +383,19 @@ document.addEventListener('DOMContentLoaded', function () {
     // 1. AI Forecast vs Actual Chart with Confidence Band
     const ctxForecast = document.getElementById('aiForecastChart');
     if (ctxForecast) {
+        const forecastLabels = {{ forecast_labels_json|default:"[]"|safe }};
+        const forecastUpper = {{ forecast_upper_json|default:"[]"|safe }};
+        const forecastLower = {{ forecast_lower_json|default:"[]"|safe }};
+        const forecastPredicted = {{ forecast_predicted_json|default:"[]"|safe }};
+
         new Chart(ctxForecast, {
             type: 'line',
             data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri (Today)', 'Sat (Est)', 'Sun (Est)'],
+                labels: forecastLabels.length ? forecastLabels : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri (Today)', 'Sat (Est)', 'Sun (Est)'],
                 datasets: [
                     {
                         label: 'Upper Confidence Limit',
-                        data: [18, 24, 30, 36, 48, 56, 62],
+                        data: forecastUpper.length ? forecastUpper : [18, 24, 30, 36, 48, 56, 62],
                         borderColor: 'transparent',
                         backgroundColor: 'rgba(31, 77, 58, 0.08)',
                         fill: '+1',
@@ -366,7 +404,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                     {
                         label: 'Lower Confidence Limit',
-                        data: [10, 14, 18, 22, 28, 34, 38],
+                        data: forecastLower.length ? forecastLower : [10, 14, 18, 22, 28, 34, 38],
                         borderColor: 'transparent',
                         backgroundColor: 'rgba(31, 77, 58, 0.08)',
                         fill: false,
@@ -374,12 +412,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         tension: 0.35,
                     },
                     {
-                        label: 'Forecast Waste Risk (~42kg trend)',
-                        data: [14, 19, 24, 29, 38, 42, 49],
+                        label: 'Forecast Demand ({{ dominant_category|default:"dairy"|capfirst }} kg)',
+                        data: forecastPredicted.length ? forecastPredicted : [14, 19, 24, 29, 38, 42, 49],
                         borderColor: '#D9381E', // Tomato urgent line
                         borderWidth: 2.5,
                         borderDash: [5, 4],
-                        pointRadius: 3,
+                        pointRadius: 4,
                         pointBackgroundColor: '#D9381E',
                         tension: 0.3,
                         fill: false,
