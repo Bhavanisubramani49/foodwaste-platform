@@ -1,174 +1,137 @@
-# AI-Powered Food Waste Management Platform
-### For Surplus Identification & Redistribution Optimization
-**Infosys Virtual Internship 7.0 — Batch 4 (AI Domain)** · *Milestone 1 Submission*
+# FoodWasteAI – AI-Powered Food Waste Management & Redistribution Platform
+
+> **AI-Powered Surplus Identification, Demand Forecasting & NGO Redistribution Optimization Platform**  
+> *Fully Integrated Multi-Tier System: Django 5 Web Application · PostgreSQL Database · FastAPI ML Microservice (Prophet / PyTorch LSTM / Scikit-learn)*
 
 ---
 
 ## 📌 Project Overview
 
-The **AI-Powered Food Waste Management Platform** is a full-stack, responsive web application engineered to minimize food waste across commercial food establishments (restaurants, supermarkets, caterers, food retailers) and streamline surplus food redistribution to NGOs and community kitchens.
+**FoodWasteAI** is a production-ready, full-stack platform designed to eliminate commercial food waste by combining predictive artificial intelligence with a real-time community redistribution marketplace.
 
-By unifying real-time inventory tracking, intelligent shelf-life and expiry risk analysis, surplus food listings, and pickup scheduling into a single responsive platform, it creates a sustainable, tech-driven food recovery ecosystem.
+The platform continuously monitors perishable commercial inventory, projects category-level consumer demand, detects imminent spoilage risks, and autonomously matches surplus food packages to nearby verified NGOs, relief kitchens, and food shelters through a secure, PIN-verified custody pipeline.
 
 ---
 
-## 🚀 Key Features (Milestone 1 Deliverables)
+## 🚀 Complete Platform Capabilities (Milestones 1 – 4)
 
-### 1. Foundation & Multi-Role Architecture
-- **Django Core Architecture:** Structured into modular applications (`core`, `food_management`, `config`).
-- **Role-Based Access Control (RBAC):**
-  - **Food Provider / Business:** Manage inventory, track expiry dates, monitor waste risk, and publish surplus listings.
-  - **NGO / Community Kitchen:** Discover available surplus donations, submit donation requests, and track pickups.
-  - **System Administrator:** Oversee system data, user profiles, and manage operations through the Django Admin interface.
-- **Custom User Profiles:** Built-in gamification profile tracking (points, levels, streaks, and achievement badges).
+### 1. Operations & Inventory Management (Milestone 1)
+- **Role-Based Portals:** Multi-tenant interface tailored for Commercial Businesses, Verified NGOs, and System Administrators.
+- **Full Inventory Lifecycle:** Complete CRUD operations tracking food category, quantity, unit, storage location, purchase date, and expiry window.
+- **Dynamic Risk Classification:** Linear decay velocity and shelf-life tracking flagging batches into `Low`, `Medium`, `High`, and `Critical (< 24h)` urgency tiers.
+- **RFC-Compliant CSV Bulk Import:** Fast ingestion of batch data with row-level validation and downloadable standard templates.
 
-### 2. Core Inventory Management
-- **Full Inventory Lifecycle:** Complete CRUD operations (Add, View, Edit, Delete) restricted to authenticated business accounts.
-- **Detailed Tracking:** Records food name, category, quantity, unit (kg, liters, units, boxes, etc.), purchase date, expiry date, storage location, and operational notes.
-- **Automated Waste-Risk Scoring:** Dynamic risk-level evaluation (`low`, `medium`, `high`, `critical`) based on shelf-life remaining, volume, and storage condition.
+### 2. Predictive AI & Machine Learning Microservice (Milestone 2)
+- **FastAPI Microservice (Port 8001):** High-throughput asynchronous prediction engine secured with `X-API-Key` authentication.
+- **Category-Adaptive Demand Forecasting:** Dual time-series models (Meta Prophet & 2-Layer Deep PyTorch LSTM) trained on commercial transaction histories.
+- **Food Spoilage Risk Classifier:** 87.3% accurate Random Forest model evaluating spoilage risk levels based on temperature, shelf-life, and demand.
+- **Smart Replenishment Recommender:** Automated reorder quantity calculation factoring in vendor lead-time and safety stock buffers ($\beta = 0.20\text{--}0.30$).
+- **Microsecond Circuit Breaker:** Django integration client seamlessly falls back to heuristic engines if the microservice is offline, guaranteeing zero UI downtime.
 
-### 3. Surplus Food Redistribution Workflow
-- **Surplus Food Listings:** Providers can convert near-expiry stock into public or NGO-facing surplus food donations with pickup windows and location details.
-- **Donation Request System:** NGOs can browse available surplus listings and submit requests with specified pickup dates and requested quantities.
-- **Status Pipeline:** Real-time request tracking across `Requested` ➔ `Scheduled` ➔ `Collected` ➔ `Cancelled` stages.
+### 3. Surplus Food Redistribution & NGO Logistics (Milestone 3)
+- **Real-Time Surplus Marketplace:** Split-view layout featuring active surplus lots, live 45-minute countdown timers, and simulated geographic mapping.
+- **NGO Community Requirements Registry:** NGOs register nutritional needs with category, required volume, urgency tier, and neighborhood delivery constraints.
+- **Multi-Criteria Smart Matching Engine:** Automated scoring (Category 40%, Quantity 30%, Urgency 20%, Location 10%) providing ranked match recommendations.
+- **Atomic Concurrency Protection:** Thread-safe claim reservations powered by database row locking (`select_for_update`) preventing double-claims.
+- **Verified Handoff & Security PIN:** Auto-generated `#RC-XXXX` collection codes validated upon driver arrival at the kitchen.
+- **Live Environmental & ESG Impact Dashboard:** Real-time metrics calculating meals served ($2.22 \times \text{kg}$), $\text{CO}_2\text{e}$ emissions prevented ($2.5 \times \text{kg}$), and landfill space saved ($500 \text{ kg/m}^3$).
 
-### 4. Database & Cloud Architecture
-- **Supabase PostgreSQL Support:** Configured for cloud PostgreSQL hosting on Supabase with SSL support (`psycopg3`), seamless connection pooling, and automated schema migration.
-- **Local Fallback:** Automatic zero-config fallback to SQLite for quick offline testing and local development.
-- **Security:** Complete separation of secrets using environment variables (`.env`).
-
-### 5. Responsive UI / UX
-- **Bootstrap 5 & Custom Modern Design:** Responsive layout optimized for smartphones, tablets, and desktop workstations.
-- **Interactive Dashboards:** Visual KPI metrics, quick actions, and data tables.
+### 4. Quality Assurance, Optimization & Delivery (Milestone 4)
+- **91 Automated Tests Passing (100%):** 60 Django unit/E2E tests and 31 FastAPI pytest scenarios.
+- **High-Performance Query Latencies:** Under 50ms p50 response times across all primary views.
+- **Comprehensive Technical Documentation:** 10 detailed technical documents located in `docs/`.
 
 ---
 
 ## 🛠️ Technology Stack
 
-| Layer | Technologies |
+| Tier | Technologies |
 |---|---|
-| **Backend Framework** | Django 5.x (Python) |
-| **Database** | PostgreSQL (Supabase) / SQLite (Local dev) |
-| **Frontend** | HTML5, Vanilla CSS, Bootstrap 5, Bootstrap Icons |
-| **Authentication & RBAC** | Django Auth & Custom `UserProfile` with role-based routing |
-| **Configuration** | `python-dotenv` for secure environment variable management |
-| **Upcoming ML/AI** | Prophet, Scikit-learn, LSTM (Demand forecasting & predictive waste scoring) |
+| **Web Platform** | Python 3.13, Django 5.x, Django Templates, Bootstrap 5.3.3, Chart.js 4.4.2 |
+| **Relational Database** | PostgreSQL 16 (`foodwaste_db`) / SQLite (test fallback) |
+| **ML Microservice** | FastAPI, Uvicorn, Pydantic, APScheduler |
+| **Forecasting Models** | Meta Prophet, PyTorch LSTM (Deep Recurrent Neural Network) |
+| **Classification Models**| Scikit-learn Random Forest Classifier |
+| **Data Processing** | Pandas, NumPy, Joblib |
 
 ---
 
 ## 📁 Repository Structure
 
 ```text
-infosys-project/
-├── config/                     # Core Django project configuration & settings
-│   ├── settings.py             # Dual-engine database config (Supabase / SQLite)
-│   ├── urls.py                 # Root URL routing
-│   └── wsgi.py
-├── core/                       # Core authentication & gamification profile app
-│   ├── models.py               # UserProfile with RBAC (Business, NGO, Admin)
-│   ├── views.py                # Register, login, logout, profile handlers
-│   └── urls.py
-├── food_management/            # Inventory, surplus & donation workflow app
-│   ├── models.py               # InventoryItem, SurplusListing, DonationRequest
-│   ├── forms.py                # Inventory, donation & listing forms
-│   ├── views.py                # Dashboard, CRUD views, and request handlers
-│   └── templates/              # App-specific HTML templates
-├── static/                     # Static CSS, JS, and image assets
-│   ├── css/theme.css           # Custom styling and design tokens
-│   └── js/
-├── templates/                  # Base layout & global templates
-│   ├── base.html               # Responsive Bootstrap 5 navbar and layout
-│   └── core/                   # Authentication & profile templates
-├── PRD.md                      # Complete Product Requirements Document
-├── requirements.txt            # Python dependencies
-├── manage.py                   # Django management script
-└── supabase_database_storage.sql # Supabase schema & storage definitions
+foodwaste_platform_v2/
+├── config/                     # Core Django project configuration & database settings
+├── core/                       # UserProfile, authentication, and gamification models
+├── docs/                       # Complete Milestone 4 Technical Documentation Suite
+│   ├── PROJECT_OVERVIEW.md     # Executive summary & platform capabilities
+│   ├── SYSTEM_ARCHITECTURE.md  # System diagrams, data flow & microservice integration
+│   ├── DATABASE_DESIGN.md      # Normalized database schemas, ER diagrams & locking
+│   ├── API_DOCUMENTATION.md    # RESTful & microservice endpoint reference
+│   ├── ML_MODEL_EVALUATION.md  # Detailed metrics (MAE, RMSE, MAPE, Accuracy, F1)
+│   ├── TESTING_REPORT.md       # Quality assurance report covering all 91 test cases
+│   ├── SECURITY_REVIEW.md      # RBAC, CSRF, input validation & vulnerability audit
+│   ├── DEPLOYMENT_GUIDE.md     # Installation, database setup & startup instructions
+│   ├── USER_GUIDE.md           # Operational manual for Businesses, NGOs, and Admins
+│   └── KNOWN_LIMITATIONS.md    # Boundary conditions, edge cases & future roadmap
+├── food_management/            # Primary application: Inventory, Surplus, NGOs, Claims, Impact
+│   ├── models.py               # InventoryItem, SurplusListing, NGORequirement, DonationRequest
+│   ├── views.py                # Dashboard, CRUD views, state machine handlers, analytics
+│   ├── matching.py             # Smart Matching Engine algorithm (100-pt scoring)
+│   ├── ml_client.py            # HTTP microservice client with automated circuit-breaker
+│   ├── services.py             # Scientific impact calculations & gamification rankings
+│   └── templates/              # Production-grade Bootstrap 5 / Chart.js templates
+├── ml-service/                 # FastAPI Predictive ML Microservice (Port 8001)
+│   ├── api/                    # FastAPI routers, schemas, and background scheduler
+│   ├── models/                 # Prophet and PyTorch LSTM model definitions and saved weights
+│   ├── reorder/                # Inventory replenishment optimization engine
+│   ├── risk/                   # Real-time spoilage risk scoring algorithms
+│   └── tests/                  # Pytest automated test suite (31 tests)
+├── ml_service/                 # Scikit-learn Random Forest food waste classification pipeline
+├── static/                     # Design tokens, custom CSS stylesheet, and JavaScript
+├── manage.py                   # Django CLI management executable
+└── requirements.txt            # Python dependencies
 ```
 
 ---
 
-## ⚡ Getting Started Locally
+## ⚡ Quick Start Guide
 
-### 1. Prerequisites
-- Python 3.10+ installed
-- Git installed
-
-### 2. Clone the Repository
-```bash
-git clone https://github.com/Yoge486/food_waste_management.git
-cd food_waste_management
-```
-
-### 3. Create and Activate Virtual Environment
-On Windows (PowerShell):
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-```
-
-On macOS / Linux:
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-### 4. Install Dependencies
-```bash
-pip install --upgrade pip
-pip install -r requirements.txt
-```
-
-### 5. Configure Environment Variables
-Copy `.env.example` to `.env`:
+### 1. Configure Environment
 ```bash
 cp .env.example .env
 ```
-Update `.env` with your Supabase credentials or leave empty to use the local SQLite database:
-```ini
-SECRET_KEY=your-django-secret-key
-DEBUG=True
 
-# Optional Supabase PostgreSQL configuration:
-DB_NAME=postgres
-DB_USER=postgres
-DB_PASSWORD=your_supabase_db_password
-DB_HOST=aws-0-region.pooler.supabase.com
-DB_PORT=5432
-```
-
-### 6. Apply Migrations & Create Superuser
+### 2. Apply Database Migrations
 ```bash
-python manage.py makemigrations
 python manage.py migrate
-python manage.py createsuperuser
 ```
 
-### 7. Run the Development Server
+### 3. Start FastAPI Machine Learning Microservice (Port 8001)
 ```bash
-python manage.py runserver
+cd ml-service
+uvicorn api.main:app --host 127.0.0.1 --port 8001 --reload
 ```
-Visit **http://127.0.0.1:8000/** in your web browser. Access the Django admin at **http://127.0.0.1:8000/admin/**.
+
+### 4. Start Django Web Platform (Port 8000)
+```bash
+python manage.py runserver 127.0.0.1:8000
+```
+Open **`http://127.0.0.1:8000/app/`** in your browser.
 
 ---
 
-## 📅 Roadmap & Next Milestones
+## 🧪 Running Automated Tests
 
-- [x] **Week 1 (Milestone 1 - Foundation & Core Inventory):**
-  - Database schema & Supabase connection
-  - Role-based registration, login, and user profiles
-  - Inventory tracking with CRUD workflows
-  - Responsive Bootstrap 5 UI and base layout
-- [ ] **Week 2 (Milestone 1 - Enhancements):**
-  - Advanced search, multi-criteria filtering, and pagination
-  - Expiry alert notifications and live metric counters
-  - Bulk CSV inventory import
-  - Final responsive verification & demo preparation
-- [ ] **Milestone 2 (AI & Analytics):**
-  - Machine learning waste-risk prediction model
-  - Demand forecasting with Prophet / Scikit-learn
-  - Detailed analytics dashboards and reporting
+```bash
+# Run all 60 Django Unit & End-to-End Tests
+python manage.py test --noinput
+
+# Run all 31 FastAPI Microservice Tests
+cd ml-service
+pytest
+```
 
 ---
 
-## 📄 License
-Developed for educational and demonstration purposes as part of the Infosys Virtual Internship 7.0.
+## 📖 Complete Documentation
+For in-depth architectural diagrams, database specifications, API schemas, model evaluations, and guides, refer to the files in the [`docs/`](docs/) directory.

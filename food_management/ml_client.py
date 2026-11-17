@@ -17,6 +17,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import time
 from typing import Any, Dict, Optional
 import urllib.error
 import urllib.parse
@@ -26,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 ML_SERVICE_URL = os.getenv('ML_SERVICE_URL', 'http://127.0.0.1:8001')
 ML_SERVICE_API_KEY = os.getenv('ML_SERVICE_API_KEY', 'dev-secret-key-food-waste-2026')
-REQUEST_TIMEOUT = float(os.getenv('ML_SERVICE_TIMEOUT', '4.0'))
+REQUEST_TIMEOUT = float(os.getenv('ML_SERVICE_TIMEOUT', '1.5'))
 
 
 class MLServiceClient:
@@ -35,8 +36,22 @@ class MLServiceClient:
     def __init__(self, base_url: str = ML_SERVICE_URL, api_key: str = ML_SERVICE_API_KEY):
         self.base_url = base_url.rstrip('/')
         self.api_key = api_key
+        self._last_offline_time = 0.0
+        self._offline_cooldown = 15.0
+
+    def _is_service_known_offline(self) -> bool:
+        return (time.time() - self._last_offline_time) < self._offline_cooldown
+
+    def _mark_offline(self):
+        self._last_offline_time = time.time()
+
+    def _mark_online(self):
+        self._last_offline_time = 0.0
 
     def _request(self, method: str, endpoint: str, payload: Optional[Dict] = None) -> Optional[Dict[str, Any]]:
+        if self._is_service_known_offline() and endpoint != '/health':
+            return None
+
         url = f'{self.base_url}{endpoint}'
         headers = {
             'X-API-Key': self.api_key,
@@ -49,6 +64,7 @@ class MLServiceClient:
         try:
             with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT) as resp:
                 if 200 <= resp.status < 300:
+                    self._mark_online()
                     body = resp.read().decode('utf-8')
                     return json.loads(body)
                 return None
@@ -56,6 +72,7 @@ class MLServiceClient:
             logger.error(f'ML service HTTP error {e.code} on {endpoint}: {e.read().decode("utf-8", errors="ignore")}')
             return None
         except Exception as e:
+            self._mark_offline()
             logger.warning(f'Failed to communicate with ML service on {endpoint}: {e}')
             return None
 

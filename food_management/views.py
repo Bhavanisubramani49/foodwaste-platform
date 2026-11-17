@@ -644,6 +644,22 @@ def inventory_list(request):
     )
 
 
+def expiry_alerts(request):
+    """
+    Dedicated view for inventory items approaching expiry or flagged with critical/high risk.
+    """
+    today = date.today()
+    threshold = today + timedelta(days=7)
+    items = InventoryItem.objects.filter(
+        Q(expiry_date__lte=threshold) | Q(risk_level__in=['critical', 'high'])
+    ).order_by('expiry_date')
+    return render(
+        request,
+        'food_management/inventory_list.html',
+        {'items': items, 'risk': 'critical'},
+    )
+
+
 @role_required('business', 'admin')
 def inventory_create(request):
     if request.method == 'POST':

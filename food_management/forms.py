@@ -36,6 +36,11 @@ class InventoryForm(forms.ModelForm):
             'notes': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if 'risk_level' in self.fields:
+            self.fields['risk_level'].required = False
+
     def clean(self):
         cleaned_data = super().clean()
         expiry_date = cleaned_data.get('expiry_date')
